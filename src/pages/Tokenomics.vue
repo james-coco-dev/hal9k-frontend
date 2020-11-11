@@ -1,7 +1,7 @@
 <template>
   <main-wrapper>
     <div>
-      <img width="30%" src="/images/tkn.png" />
+      <img width="30%" src="@/static/images/tkn.png" />
     </div>
     <p>
       H9K Tokenomics

@@ -17,13 +17,9 @@ export default {
       loading: (state) => state.loading,
     }),
   },
-  mounted() {
-    this.$store.commit("loading", true);
-    setTimeout(() => {
-      this.$store.commit("loading", false);
-      this.$store.commit("event/setStarted", false);
-      if (this.$route.name !== "Event") this.$router.push("/event");
-    }, 1500);
-  },
+  mounted() {},
 };
 </script>
+<style lang="scss">
+@import "./css/style.scss";
+</style>

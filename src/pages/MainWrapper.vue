@@ -13,32 +13,32 @@
       <section class="empty"></section>
       <section class="c3 screen">
         <p class="label">C 3</p>
-        <img width="100%" src="/images/c3.gif" />
+        <img width="100%" src="@/static/images/c3.gif" />
       </section>
       <section class="c4 screen">
         <p class="label">C 4</p>
-        <img width="100%" src="/images/c4.gif" />
+        <img width="100%" src="@/static/images/c4.gif" />
       </section>
     </div>
     <div class="row">
       <section class="c5 screen">
         <p class="label">C 5</p>
-        <img width="100%" src="/images/c5.gif" />
+        <img width="100%" src="@/static/images/c5.gif" />
       </section>
       <section class="c6 screen">
         <p class="label">C 6</p>
-        <img width="100%" src="/images/c6.gif" />
+        <img width="100%" src="@/static/images/c6.gif" />
       </section>
       <section class="loading">
-        <img width="45%" src="/images/hal9kloading.gif" />
+        <img width="45%" src="@/static/images/hal9kloading.gif" />
       </section>
       <section class="c7 screen">
         <p class="label">C 7</p>
-        <img width="100%" src="/images/c7.gif" />
+        <img width="100%" src="@/static/images/c7.gif" />
       </section>
       <section class="c8 screen">
         <p class="label">C 8</p>
-        <img width="100%" src="/images/c8.gif" />
+        <img width="100%" src="@/static/images/c8.gif" />
       </section>
     </div>
   </main>

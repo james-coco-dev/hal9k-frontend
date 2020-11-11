@@ -2,7 +2,7 @@
   <main-wrapper>
     <div>
       <div>
-        <img width="30%" src="/images/farm.png" />
+        <img width="30%" src="@/static/images/farm.png" />
       </div>
       <p>
         H9K/ETH Stake Pool

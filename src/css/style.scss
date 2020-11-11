@@ -72,7 +72,7 @@ section {
   }
   &.c2 {
     background-size: cover;
-    background-image: url("/images/c2.gif");
+    background-image: url("./static/images/c2.gif");
     .c2-container {
       padding: 0.5rem;
       text-align: left;
@@ -106,9 +106,6 @@ button {
   background-color: #fff;
   cursor: pointer;
   color: #6b0e51;
-  &.secondary {
-    color: black;
-  }
   font-weight: bold;
   padding: 6px 10px;
   border: none;
@@ -121,6 +118,11 @@ button {
     top: 1px;
   }
 }
+.connect-but {
+  color: red;
+  background: black;
+  border: 1px solid red;
+}
 .button-group {
   display: flex;
   flex-direction: row;
@@ -132,11 +134,50 @@ button {
 }
 .background-1 {
   @include bgbox;
-  background-image: url(/images/h9k-bg.jpg);
+  background-image: url(./static/images/h9k-bg.jpg);
 }
 
 .background-2 {
   @include bgbox;
-  background-position: center;
-  background-image: url(/images/lge-event-bg.jpg);
+  background-position: bottom;
+  background-image: url(./static/images/lge-event-bg.jpg);
+}
+
+.loading-overlay {
+  @include bgbox;
+  background: black;
+  display: flex;
+  place-items: center;
+  place-content: center;
+  z-index: 100;
+  text-align: center;
+}
+
+progress[value] {
+  height: 14px;
+  width: 500px;
+  margin: auto;
+  display: block;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+}
+progress[value]::-webkit-progress-bar {
+  border-radius: 2px;
+  background: rgba(227, 227, 227, 0.817);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+progress[value]::-webkit-progress-value {
+  background-image: -webkit-linear-gradient(
+      -45deg,
+      transparent 33%,
+      rgba(0, 0, 0, 0.1) 33%,
+      rgba(0, 0, 0, 0.1) 66%,
+      transparent 66%
+    ),
+    -webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)),
+    -webkit-linear-gradient(left, #09c, rgb(40, 71, 249));
+
+  border-radius: 2px;
+  background-size: 35px 20px, 100% 100%, 100% 100%;
 }
