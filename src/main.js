@@ -1,30 +1,33 @@
 // Import Vue
 import Vue from "vue";
-import VueRouter from "vue-router";
 import MainWrapper from "@/pages/MainWrapper";
 
 // Import Vue App, routes, store
 import App from "./App";
-import routes from "./routes";
+import router from "./router";
+import { sync } from "vuex-router-sync";
+import store from "./store";
+import NavBar from "./Navbar";
+
+import "./css/style.scss";
+
+//Amplify config
 import Amplify from "aws-amplify";
 import "@aws-amplify/ui-vue";
-import "./css/style.scss";
 import aws_exports from "./aws-exports";
 
 Amplify.configure(aws_exports);
+//////////////////////////////
 
 Vue.component("main-wrapper", MainWrapper);
-Vue.use(VueRouter);
-
+Vue.component("nav-bar", NavBar);
 // Configure router
-const router = new VueRouter({
-  routes,
-  linkActiveClass: "active",
-  mode: "history",
-});
+
+sync(store, router);
 
 new Vue({
   el: "#app",
-  render: (h) => h(App),
+  store,
   router,
+  render: (h) => h(App),
 });

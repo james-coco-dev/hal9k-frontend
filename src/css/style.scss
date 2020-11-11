@@ -3,9 +3,6 @@ body {
   font-weight: 500;
   font-style: normal;
   background-color: black;
-  background-image: url("/images/h9k-bg.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
   font-size: 0.8em;
   color: white;
 }
@@ -15,11 +12,22 @@ body {
   }
 }
 
+@mixin bgbox {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  z-index: -100;
+  left: 0;
+  top: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 main {
   display: flex;
   flex-direction: column;
   gap: 60px;
-  padding: 2rem;
+  padding: 1rem 2rem;
 }
 
 .row {
@@ -85,7 +93,7 @@ section {
   }
 }
 
-.menu-title {
+.blink {
   animation: blinker-one 1s linear infinite;
 }
 
@@ -98,6 +106,9 @@ button {
   background-color: #fff;
   cursor: pointer;
   color: #6b0e51;
+  &.secondary {
+    color: black;
+  }
   font-weight: bold;
   padding: 6px 10px;
   border: none;
@@ -118,4 +129,14 @@ button {
 
 .info-box {
   margin: 1rem 0;
+}
+.background-1 {
+  @include bgbox;
+  background-image: url(/images/h9k-bg.jpg);
+}
+
+.background-2 {
+  @include bgbox;
+  background-position: center;
+  background-image: url(/images/lge-event-bg.jpg);
 }

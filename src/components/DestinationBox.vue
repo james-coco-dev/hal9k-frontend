@@ -1,6 +1,6 @@
 <template>
   <section class="destination-box">
-    <p class="menu-title">Choose a destination...</p>
+    <p class="blink">Choose a destination...</p>
     <div class="menu-list">
       <router-link class="menu-item" to="/">&#8227; Welcome</router-link>
       <router-link class="menu-item" to="/farm">&#8227; Farming</router-link>
