@@ -8,7 +8,11 @@ import router from "./router";
 import { sync } from "vuex-router-sync";
 import store from "./store";
 import NavBar from "./Navbar";
-
+//Amplify
+import Amplify from "aws-amplify";
+import "@aws-amplify/ui-vue";
+import aws_exports from "./aws-exports";
+Amplify.configure(aws_exports);
 //////////////////////////////
 
 Vue.component("main-wrapper", MainWrapper);

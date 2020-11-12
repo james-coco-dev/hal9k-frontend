@@ -5,7 +5,7 @@
         <img width="30%" src="@/static/images/farm.png" />
       </div>
       <p>
-        H9K/ETH Stake Pool
+        HAL9K/ETH Stake Pool
       </p>
       <div class="info-box">
         <div># APY</div>

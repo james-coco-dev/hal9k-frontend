@@ -13,11 +13,13 @@
   "author": "derekleesoft@gmail.com",
   "license": "MIT",
   "dependencies": {
+    "@aws-amplify/ui-vue": "^0.2.26",
     "@babel/core": "^7.4.5",
     "@babel/polyfill": "^7.2",
     "@babel/preset-env": "^7.12.1",
     "@babel/runtime": "^7.12.5",
     "@metamask/detect-provider": "^1.2.0",
+    "aws-amplify": "^3.3.7",
     "core-js": "^2.6.5",
     "moment": "^2.29.1",
     "vue": "^2.6",
