@@ -1,6 +1,6 @@
 // Import Vue
 import Vue from "vue";
-import MainWrapper from "@/pages/MainWrapper";
+import MainWrapper from "@/pages/Home/MainWrapper";
 
 // Import Vue App, routes, store
 import App from "./App";
@@ -13,8 +13,8 @@ import Amplify from "aws-amplify";
 import "@aws-amplify/ui-vue";
 import aws_exports from "./aws-exports";
 Amplify.configure(aws_exports);
-//////////////////////////////
 
+//////////////////////////////
 Vue.component("main-wrapper", MainWrapper);
 Vue.component("nav-bar", NavBar);
 // Configure router

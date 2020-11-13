@@ -12,17 +12,6 @@ body {
   }
 }
 
-@mixin bgbox {
-  position: absolute;
-  height: 100vh;
-  width: 100%;
-  z-index: -100;
-  left: 0;
-  top: 0;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
 main {
   display: flex;
   flex-direction: column;
@@ -117,11 +106,21 @@ button {
     position: relative;
     top: 1px;
   }
-}
-.connect-but {
-  color: red;
-  background: black;
-  border: 1px solid red;
+  &.red {
+    color: red;
+    background: black;
+    border: 1px solid red;
+  }
+  &.green {
+    color: rgb(22, 189, 22);
+    background: black;
+    border: 1px solid rgb(22, 189, 22);
+  }
+  &.white {
+    color: white;
+    background: black;
+    border: 1px solid white;
+  }
 }
 .button-group {
   display: flex;
@@ -132,6 +131,18 @@ button {
 .info-box {
   margin: 1rem 0;
 }
+
+@mixin bgbox {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  z-index: -100;
+  left: 0;
+  top: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 .background-1 {
   @include bgbox;
   background-image: url(./static/images/h9k-bg.jpg);
@@ -141,6 +152,12 @@ button {
   @include bgbox;
   background-position: bottom;
   background-image: url(./static/images/lge-event-bg.jpg);
+}
+.background-3 {
+  @include bgbox;
+  background-repeat: repeat;
+  background-size: auto;
+  background-image: url(./static/images/repeated-square-dark.png);
 }
 
 .loading-overlay {
@@ -180,4 +197,9 @@ progress[value]::-webkit-progress-value {
 
   border-radius: 2px;
   background-size: 35px 20px, 100% 100%, 100% 100%;
+}
+
+.jazz-icon {
+  display: flex;
+  align-items: center;
 }

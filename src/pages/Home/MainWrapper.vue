@@ -1,5 +1,5 @@
 <template>
-  <main class="home">
+  <main>
     <div class="background-1"></div>
     <div class="row">
       <section class="c1 screen">

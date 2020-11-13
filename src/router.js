@@ -1,16 +1,17 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/pages/Home";
-import Farming from "@/pages/Farming";
+import Welcome from "@/pages/Home/Welcome";
+import Farming from "@/pages/Home/Farming";
+import Tokenomics from "@/pages/Home/Tokenomics";
 import Event from "@/pages/Event";
-import Tokenomics from "@/pages/Tokenomics";
+import Shop from "@/pages/Shop";
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "Welcome",
+    component: Welcome,
   },
   {
     path: "/farm",
@@ -26,6 +27,11 @@ const routes = [
     path: "/event",
     name: "Event",
     component: Event,
+  },
+  {
+    path: "/shop",
+    name: "Shop",
+    component: Shop,
   },
 ];
 const router = new VueRouter({

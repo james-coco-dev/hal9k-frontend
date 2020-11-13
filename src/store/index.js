@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
-  modules: [],
+  modules: ["account"],
 });
 
 export default new Vuex.Store({

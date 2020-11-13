@@ -10,4 +10,9 @@ export default {
       state.address = payload;
     },
   },
+  actions: {
+    disconnect({ commit, state }) {
+      commit("setAddress", null);
+    },
+  },
 };

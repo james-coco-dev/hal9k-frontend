@@ -20,6 +20,7 @@
     "@babel/runtime": "^7.12.5",
     "@metamask/detect-provider": "^1.2.0",
     "aws-amplify": "^3.3.7",
+    "axios": "^0.21.0",
     "core-js": "^2.6.5",
     "moment": "^2.29.1",
     "vue": "^2.6",

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="background-2"></div>
+    <div class="background-1"></div>
     <div class="event-title">HAL9K Liquidity Generation Event</div>
     <div class="event-box">
       <div class="left-day" v-if="!isFinished">
@@ -26,7 +26,6 @@
         <p>
           <span class="green">$ {{ marketCap }}</span> Market Cap
         </p>
-        <center>Thank You to everyone for participating!</center>
       </div>
       <div v-if="address">
         <div>
@@ -43,6 +42,9 @@
           ADD LIQUIDITY AND GET LP TOKENS
         </button>
       </div>
+      <center>
+        <div class="thanks-title">Thank You to everyone for participating!</div>
+      </center>
     </div>
   </div>
 </template>
@@ -135,6 +137,7 @@ export default {
 }
 .liquidity-add-but {
   margin: auto;
+  display: block;
   padding: 1rem;
   margin-top: 1rem;
   color: white;
@@ -146,5 +149,10 @@ export default {
     color: #eee3;
     border: 1px solid #eee3;
   }
+}
+.thanks-title {
+  margin-top: 1rem;
+  color: rgb(45, 230, 45);
+  font-size: 20px;
 }
 </style>
