@@ -1,10 +1,8 @@
 <template>
   <div class="shop-page">
     <div class="background-1"></div>
-    <div class="set-container">
-      <div class="signal">
-        <img src="@/static/images/glow-mobile.gif" />
-      </div>
+    <div class="signal">
+      <img src="@/static/images/glow-mobile.gif" />
     </div>
     <div class="pool-container">
       <div v-for="(nft, index) in pools" :key="index" class="pool-item">
@@ -29,7 +27,6 @@ import { POOLS_KEY } from "@/utils/config";
 export default {
   data: () => ({
     pools: [],
-    loading: false,
   }),
   async mounted() {
     await this.onSelectPool("V1968");
@@ -37,10 +34,10 @@ export default {
   methods: {
     async onSelectPool(pool) {
       this.loading = true;
+      this.$store.commit("loading", true);
       const { data } = await axios.get(POOLS_KEY + pool);
-      console.log(data);
+      this.$store.commit("loading", false);
       this.pools = data;
-      this.loading = false;
     },
   },
 };
@@ -52,6 +49,7 @@ export default {
   grid-gap: 50px;
   width: 60%;
   margin: auto;
+  margin-top: 5rem;
   margin-bottom: 2rem;
 }
 .pool-item {
@@ -89,20 +87,6 @@ export default {
     .nft-description {
       margin: 1rem 0;
       color: white;
-    }
-  }
-}
-.set-container {
-  display: flex;
-  justify-content: center;
-  width: 60%;
-  margin: auto;
-  padding: 0 2rem;
-  margin-bottom: 5rem;
-  .signal {
-    font-size: 1.5rem;
-    img {
-      width: 150px;
     }
   }
 }

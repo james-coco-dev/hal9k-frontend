@@ -1,50 +1,63 @@
 <template>
   <div>
     <div class="background-1"></div>
-    <div class="event-title">HAL9K Liquidity Generation Event</div>
-    <div class="event-box">
-      <div class="left-day" v-if="!isFinished">
-        Liquidity Event Ends in
-        <p>
-          <span class="red">{{ day }}</span> days
-          <span class="red">{{ hour }}</span> hours
-          <span class="red">{{ min }}</span> mins
-          <span class="red">{{ sec }}</span> secs
-        </p>
-      </div>
-      <div class="left-day" v-else>Liquidity Event Ended</div>
-      <progress max="100" :value="value"></progress>
-      <div class="event-infobox">
-        <p>
-          <span class="green">{{ totalEthContributed }}</span> ETH Total
-          Contributed
-        </p>
-        <p>
-          <span class="green">$ {{ halPrice }}</span> HAL9K Price Estimate after
-          LGE
-        </p>
-        <p>
-          <span class="green">$ {{ marketCap }}</span> Market Cap
-        </p>
-      </div>
-      <div v-if="address">
-        <div>
-          <input type="checkbox" v-model="agree" id="agree-box" />
-          <label for="agree-box" class="green"
-            >I understand that this contract is provided with no warranty of any
-            kind. I agree to not hold the contract creators, HAL9K team members
-            or anyone associated with this event liable for any damage monetary
-            and otherwise I might occur. I understand that any smart contract
-            interaction carries an inherent risk.</label
-          >
+
+    <div class="signal">
+      <img src="@/static/images/glow-mobile.gif" />
+    </div>
+    <div class="row event-container">
+      <section class="e1 screen">
+        <p class="label">LGE 1</p>
+        <div class="lge-box">
+          <img class="blink" src="@/static/images/lge1.png" width="30%" />
+          <div class="info-box">
+            <div>{{ totalEthContributed }} ETH Total Contributed</div>
+            <div>$ {{ halPrice }} HAL9K Price Estimate after LGE</div>
+            <div>{{ marketCap }} Market Cap</div>
+          </div>
+          <div v-if="address">
+            <div class="agree-container">
+              <input type="checkbox" v-model="agree" id="agree-box" />
+              <label for="agree-box">
+                I understand that this contract is provided with no warranty of
+                any kind. I agree to not hold the contract creators, HAL9K team
+                members or anyone associated with this event liable for any
+                damage monetary and otherwise I might occur. I understand that
+                any smart contract interaction carries an inherent risk.</label
+              >
+            </div>
+            <button class="liquidity-add-but" :disabled="!agree">
+              ADD LIQUIDITY AND GET LP TOKENS
+            </button>
+          </div>
         </div>
-        <button class="liquidity-add-but" :disabled="!agree">
-          ADD LIQUIDITY AND GET LP TOKENS
-        </button>
-      </div>
-      <center>
-        <div class="thanks-title">Thank You to everyone for participating!</div>
-      </center>
+      </section>
+      <section class="e2 screen">
+        <p class="label">EVENT</p>
+        <div class="event-box">
+          <div class="progress-box">
+            <img
+              class="blink"
+              src="@/static/images/eventlabel.png"
+              width="30%"
+            />
+            <progress max="100" :value="value"></progress>
+          </div>
+          <div class="left-day" v-if="!isFinished">
+            <p>Liquidity Event Ends in</p>
+            <p>{{ day }} days</p>
+            <p>{{ hour }} hours</p>
+            <p>{{ min }} mins</p>
+            <p>{{ sec }} secs</p>
+          </div>
+          <div class="left-day" v-else>Liquidity Event Ended</div>
+          <img class="blink" src="@/static/images/event.png" width="70%" />
+        </div>
+      </section>
+      <section class="screen">
+        <p class="label">C 3</p>
+        <img width="100%" src="@/static/images/c7.gif" />
+      </section>
     </div>
   </div>
 </template>
@@ -103,56 +116,48 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.event-title {
-  font-size: 3rem;
-  text-align: center;
-  padding: 3rem 0;
-  margin-top: 1rem;
-  font-weight: 700;
+.event-container {
+  margin: 2rem 2rem;
 }
+.lge-box,
 .event-box {
-  width: 700px;
+  padding: 1rem;
+  font-size: 1.2em;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin: auto;
-  margin-top: 2rem;
-  padding: 2rem;
-  .left-day {
-    font-size: 1.5rem;
-    text-align: center;
+  gap: 20px;
+}
+.left-day {
+  font-size: 20px;
+  text-align: left;
+  p {
+    font-weight: 500;
   }
-  border: 1px solid white;
-  background: #eeeeee10;
 }
-.red {
-  color: red;
-}
-.green {
-  color: #59f134;
-}
-.event-infobox {
+.info-box {
   margin-top: 1rem;
-  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.agree-container {
+  margin-bottom: 20px;
+}
+.progress-box {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  progress {
+    flex: 1;
+  }
 }
 .liquidity-add-but {
-  margin: auto;
-  display: block;
-  padding: 1rem;
-  margin-top: 1rem;
-  color: white;
-  background: #eee1;
-  width: 400px;
+  background: transparent;
   border: 1px solid white;
+  color: white;
   &:disabled {
-    background: transparent;
-    color: #eee3;
-    border: 1px solid #eee3;
+    border: 1px solid #fff3;
+    color: #fff3;
   }
-}
-.thanks-title {
-  margin-top: 1rem;
-  color: rgb(45, 230, 45);
-  font-size: 20px;
 }
 </style>

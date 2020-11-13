@@ -8,7 +8,7 @@
       </section>
       <section class="c2 screen">
         <p class="label">C 2</p>
-        <div class="c2-container scale-up-tl"><slot></slot></div>
+        <div class="c2-container"><slot></slot></div>
       </section>
       <section class="empty"></section>
       <section class="c3 screen">

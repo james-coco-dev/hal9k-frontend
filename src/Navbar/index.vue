@@ -1,18 +1,22 @@
 <template>
   <div class="nav-bar">
-    <button class="white" @click="nftshop">NFT Gallery</button>
-    <button class="white" v-if="address" @click="disconnect">
+    <Menu />
+    <button class="green" v-if="address" @click="disconnect">
       {{ compressAddress(address, 10, 5) }}
     </button>
-    <button class="red" v-else @click="connectWallet">
+    <button class="white" v-else @click="connectWallet">
       Connect Wallet
     </button>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
+import Menu from "./Menu";
 import Metamask from "../utils/Metamask";
 export default {
+  components: {
+    Menu,
+  },
   computed: {
     ...mapState({
       address: (state) => state.account.address,
@@ -39,7 +43,6 @@ export default {
       Metamask.disconnect();
     },
   },
-  mounted() {},
 };
 </script>
 <style scoped>

@@ -19,6 +19,18 @@ main {
   padding: 1rem 2rem;
 }
 
+.signal {
+  display: flex;
+  justify-content: center;
+  width: 60%;
+  margin: auto;
+  padding: 0 2rem;
+  font-size: 1.5rem;
+  img {
+    width: 150px;
+  }
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -36,27 +48,22 @@ main {
 }
 section {
   &.screen {
+    border: #0e0e0e solid 4px;
     display: flex;
+    flex: 1;
     flex-direction: column;
-    img {
+    > img {
       flex: 1;
     }
   }
-  &.c1 {
-    border: #0e0e0e solid 4px;
-    background: #0057b7;
-    flex: 1;
+  &.e1 {
+    background: #0988a7;
   }
-  &.c2,
-  &.c3,
-  &.c4,
-  &.c5,
-  &.c6,
-  &.c7,
-  &.c8 {
-    border: #0e0e0e solid 4px;
-    text-align: center;
-    color: white;
+  &.e2 {
+    background: #b81b35;
+  }
+  &.c1 {
+    background: #0057b7;
     flex: 1;
   }
   &.c2 {
@@ -153,12 +160,6 @@ button {
   background-position: bottom;
   background-image: url(./static/images/lge-event-bg.jpg);
 }
-.background-3 {
-  @include bgbox;
-  background-repeat: repeat;
-  background-size: auto;
-  background-image: url(./static/images/repeated-square-dark.png);
-}
 
 .loading-overlay {
   @include bgbox;
@@ -172,7 +173,6 @@ button {
 
 progress[value] {
   height: 14px;
-  width: 500px;
   margin: auto;
   display: block;
   -webkit-appearance: none;
@@ -180,22 +180,11 @@ progress[value] {
   border: none;
 }
 progress[value]::-webkit-progress-bar {
-  border-radius: 2px;
-  background: rgba(227, 227, 227, 0.817);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+  border: 1px solid white;
+  background: transparent;
 }
 progress[value]::-webkit-progress-value {
-  background-image: -webkit-linear-gradient(
-      -45deg,
-      transparent 33%,
-      rgba(0, 0, 0, 0.1) 33%,
-      rgba(0, 0, 0, 0.1) 66%,
-      transparent 66%
-    ),
-    -webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)),
-    -webkit-linear-gradient(left, #09c, rgb(40, 71, 249));
-
-  border-radius: 2px;
+  background: white;
   background-size: 35px 20px, 100% 100%, 100% 100%;
 }
 
