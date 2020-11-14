@@ -6,7 +6,7 @@
       @mouseleave="isOpened = false"
     >
       MENU
-      <div class="menu-list" v-if="isOpened">
+      <div class="menu-list" v-if="isOpened" @click="isOpened = false">
         <router-link class="menu-item" to="/">MAIN CONSOLE</router-link>
         <router-link class="menu-item" to="/shop">NFT GALLERY</router-link>
         <router-link class="menu-item" to="/event">LGE EVENT</router-link>
