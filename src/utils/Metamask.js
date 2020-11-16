@@ -40,9 +40,11 @@ class Web3Wrapper {
         .then(this.handleAccountsChanged)
         .catch((err) => {
           console.error(err);
+          store.dispatch("account/disconnect");
         });
     } catch (err) {
       console.error(err);
+      store.dispatch("account/disconnect");
     }
   };
 }
