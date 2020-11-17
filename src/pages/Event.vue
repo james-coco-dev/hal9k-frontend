@@ -20,8 +20,6 @@
               <div>Deposit ETH:</div>
               <input
                 class="deposit-input"
-                type="number"
-                step="0.01"
                 v-model="ethToDeposit"
                 v-on:keyup.enter="addLiquidity"
               />
@@ -113,6 +111,9 @@ export default {
     async provider() {
       if (this.provider) await this.loadContract();
     },
+    ethToDeposit() {
+      this.ethToDeposit = this.ethToDeposit.replace(/[^0-9.]/, "");
+    },
   },
   methods: {
     retrieveTimestamp() {
@@ -143,7 +144,7 @@ export default {
     },
 
     async addLiquidity($event) {
-      if (!this.agree || !this.ethToDeposit || !this.hal9k) return;
+      if (!this.agree || !this.hal9k || !parseFloat(this.ethToDeposit)) return;
       try {
         const ethToDeposit = this.web3.utils.toWei(this.ethToDeposit);
         const returnValue = await this.hal9k.methods
