@@ -136,6 +136,12 @@ export default {
       setTimeout(() => this.retrieveTimestamp(), 1000);
     },
 
+    async getTotalEthContributed() {
+      if (!this.hal9k) return;
+      const res = await this.hal9k.methods.totalETHContributed().call();
+      this.totalEthContributed = Math.max(0, this.web3.utils.fromWei(res));
+    },
+
     async addLiquidity($event) {
       if (!this.agree || !this.ethToDeposit || !this.hal9k) return;
       try {
@@ -154,7 +160,7 @@ export default {
           console.log("Successed");
         }
       } catch (e) {
-        console.log("Error", e);
+        console.error(e);
       }
     },
     async loadContract() {
@@ -168,6 +174,7 @@ export default {
       } catch (e) {
         console.error(e);
       }
+      await this.getTotalEthContributed();
       this.$store.commit("loading", false);
       this.retrieveTimestamp();
     },
