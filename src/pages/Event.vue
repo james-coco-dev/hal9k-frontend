@@ -133,21 +133,10 @@
         if (Metamask.hal9k) {
           try {
             const ethToDeposit = Metamask.web3.utils.toWei(this.ethToDeposit);
-            console.log(ethToDeposit);
-            const returnValue = await Metamask.hal9k.methods.addLiquidity({ data: true, from: address, value: ethToDeposit }).send();
-            console.log("Event Watching...", returnValue);
-            Metamask.hal9k.events.LiquidityAddition({}, (error, event) => {
-              console.log(event);
-            }).on('data', (event, returnValues) => {
-                console.log(event);
-                if (event) {
-                  console.log("Successfully deposited " + returnValues.value + " to " + returnValues.dst);
-                }
-              })
-              .on('changed', (event) => {
-                console.log('changed', event);
-              })
-              .on('error', console.error);
+            const returnValue = await Metamask.hal9k.methods.addLiquidity(true).send({from: address, value: ethToDeposit});
+            if (returnValue && returnValue.events.LiquidityAddition.returnValues.value === ethToDeposit) {
+              console.log('Successed');
+            }
           } catch (e) {
             console.log("Error", e);
           }
