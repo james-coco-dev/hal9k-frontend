@@ -4,6 +4,8 @@ import VuexPersistence from "vuex-persist";
 
 import account from "./modules/account";
 import event from "./modules/event";
+import contract from "./modules/contract";
+import metamask from "./modules/metamask";
 
 Vue.use(Vuex);
 
@@ -16,6 +18,8 @@ export default new Vuex.Store({
   modules: {
     account,
     event,
+    metamask,
+    contract,
   },
 
   state: {

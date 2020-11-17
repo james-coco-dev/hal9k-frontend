@@ -1,11 +1,12 @@
 import detectEthereumProvider from "@metamask/detect-provider";
-import { Artifact } from './config';
-import Hal9kJson from './abi/Hal9k.json';
-import Hal9kLtdJson from './abi/Hal9kLtd.json';
-import Hal9kNftPoolJson from './abi/Hal9kNftPool.json';
-import Hal9kVaultJson from './abi/Hal9kVault.json';
+import { Artifact } from "./config";
+import Hal9kJson from "./abi/Hal9k.json";
+import Hal9kLtdJson from "./abi/Hal9kLtd.json";
+import Hal9kNftPoolJson from "./abi/Hal9kNftPool.json";
+import Hal9kVaultJson from "./abi/Hal9kVault.json";
+import Hal9kv1Router from "./abi/Hal9kv1Router.json";
 import store from "../store";
-import Web3 from 'web3';
+import Web3 from "web3";
 
 class Web3Wrapper {
   constructor() {
@@ -15,29 +16,28 @@ class Web3Wrapper {
     this.hal9kVault = null;
     this.hal9kLtd = null;
     this.hal9kNftPool = null;
+    this.hal9kv1Router = null;
     this.web3 = null;
   }
 
   handleChainChanged = (_chainId) => {
-    console.log("chainid========>", _chainId);
+    store.commit("account/setChainId", _chainId);
   };
 
   handleAccountsChanged = (accounts) => {
-    console.log("address ===>", accounts);
     const { address } = store.state.account;
-    this.hal9k.options.from = address;
-    this.hal9kLtd.options.from = address;
-    this.hal9kNftPool.options.from = address;
-    this.hal9kVault.options.from = address;
     if (accounts.length === 0) {
-      store.dispatch("account/disconnect");
+      this.disconnect();
     } else if (accounts[0] !== address) {
       store.commit("account/setAddress", accounts[0]);
+      store.commit("contract/changeFromAddress", account[0]);
     }
   };
 
   disconnect = () => {
     store.dispatch("account/disconnect");
+    store.commit("metamask/clearProvider");
+    store.commit("contract/clearContracts");
   };
 
   connect = async () => {
@@ -62,27 +62,48 @@ class Web3Wrapper {
           console.error(err);
           store.dispatch("account/disconnect");
         });
-      
+      store.commit("metamask/setProvider", this.provider);
       this.web3 = new Web3(this.provider);
-
-      this.hal9k = new this.web3.eth.Contract(Hal9kJson, Artifact.rinkeby.hal9k);
+      store.commit("metamask/setWeb3", this.web3);
+      this.hal9k = new this.web3.eth.Contract(
+        Hal9kJson,
+        Artifact.rinkeby.hal9k
+      );
       this.hal9k.setProvider(this.provider);
-      this.hal9k.options.address = Artifact.rinkeby.hal9k;
 
-      this.hal9kLtd = new this.web3.eth.Contract(Hal9kLtdJson, Artifact.rinkeby.hal9kLtd);
+      this.hal9kLtd = new this.web3.eth.Contract(
+        Hal9kLtdJson,
+        Artifact.rinkeby.hal9kLtd
+      );
       this.hal9kLtd.setProvider(this.provider);
-      this.hal9kLtd.options.address = Artifact.rinkeby.hal9kLtd;
 
-      this.hal9kNftPool = new this.web3.eth.Contract(Hal9kNftPoolJson, Artifact.rinkeby.hal9kNftPool);
+      this.hal9kNftPool = new this.web3.eth.Contract(
+        Hal9kNftPoolJson,
+        Artifact.rinkeby.hal9kNftPool
+      );
       this.hal9kNftPool.setProvider(this.provider);
-      this.hal9kNftPool.options.address = Artifact.rinkeby.hal9kNftPool;
 
-      this.hal9kVault = new this.web3.eth.Contract(Hal9kVaultJson, Artifact.rinkeby.hal9kVault);
+      this.hal9kVault = new this.web3.eth.Contract(
+        Hal9kVaultJson,
+        Artifact.rinkeby.hal9kVault
+      );
       this.hal9kVault.setProvider(this.provider);
-      this.hal9kVault.options.address = Artifact.rinkeby.hal9kNftPool;
+
+      this.hal9kv1Router = new this.web3.eth.Contract(
+        Hal9kv1Router,
+        Artifact.rinkeby.hal9kv1Router
+      );
+      this.hal9kv1Router.setProvider(this.provider);
+      store.commit("contract/setContracts", {
+        hal9k: this.hal9k,
+        hal9kLtd: this.hal9kLtd,
+        hal9kNftPool: this.hal9kNftPool,
+        hal9kVault: this.hal9kVault,
+        hal9kv1Router: this.hal9kv1Router,
+      });
     } catch (err) {
       console.error(err);
-      store.dispatch("account/disconnect");
+      this.disconnect();
     }
   };
 }

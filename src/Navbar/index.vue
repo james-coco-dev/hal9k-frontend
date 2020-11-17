@@ -12,7 +12,7 @@
 <script>
 import { mapState } from "vuex";
 import Menu from "./Menu";
-import Metamask from "../utils/Metamask";
+import Web3Wrapper from "../utils/Web3Wrapper";
 export default {
   components: {
     Menu,
@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     async connectWallet() {
-      await Metamask.connect();
+      await Web3Wrapper.connect();
     },
     compressAddress(address, leftOffset, rightOffset) {
       return (
@@ -40,7 +40,7 @@ export default {
       this.$router.push("/shop");
     },
     disconnect() {
-      Metamask.disconnect();
+      Web3Wrapper.disconnect();
     },
   },
 };
