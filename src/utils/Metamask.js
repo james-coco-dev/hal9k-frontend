@@ -25,6 +25,10 @@ class Web3Wrapper {
   handleAccountsChanged = (accounts) => {
     console.log("address ===>", accounts);
     const { address } = store.state.account;
+    this.hal9k.options.from = address;
+    this.hal9kLtd.options.from = address;
+    this.hal9kNftPool.options.from = address;
+    this.hal9kVault.options.from = address;
     if (accounts.length === 0) {
       store.dispatch("account/disconnect");
     } else if (accounts[0] !== address) {
@@ -60,18 +64,22 @@ class Web3Wrapper {
         });
       
       this.web3 = new Web3(this.provider);
-      
+
       this.hal9k = new this.web3.eth.Contract(Hal9kJson, Artifact.rinkeby.hal9k);
       this.hal9k.setProvider(this.provider);
+      this.hal9k.options.address = Artifact.rinkeby.hal9k;
 
       this.hal9kLtd = new this.web3.eth.Contract(Hal9kLtdJson, Artifact.rinkeby.hal9kLtd);
       this.hal9kLtd.setProvider(this.provider);
+      this.hal9kLtd.options.address = Artifact.rinkeby.hal9kLtd;
 
       this.hal9kNftPool = new this.web3.eth.Contract(Hal9kNftPoolJson, Artifact.rinkeby.hal9kNftPool);
       this.hal9kNftPool.setProvider(this.provider);
+      this.hal9kNftPool.options.address = Artifact.rinkeby.hal9kNftPool;
 
       this.hal9kVault = new this.web3.eth.Contract(Hal9kVaultJson, Artifact.rinkeby.hal9kVault);
       this.hal9kVault.setProvider(this.provider);
+      this.hal9kVault.options.address = Artifact.rinkeby.hal9kNftPool;
     } catch (err) {
       console.error(err);
       store.dispatch("account/disconnect");
