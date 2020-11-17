@@ -8,6 +8,8 @@ import router from "./router";
 import { sync } from "vuex-router-sync";
 import store from "./store";
 import NavBar from "./Navbar";
+import responsive from "vue-responsive";
+Vue.directive("responsive", responsive);
 //Amplify
 import Amplify from "aws-amplify";
 import "@aws-amplify/ui-vue";

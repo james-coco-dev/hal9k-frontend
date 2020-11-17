@@ -29,7 +29,7 @@
         <p class="label">C 6</p>
         <img width="100%" src="@/static/images/c6.gif" />
       </section>
-      <section class="loading">
+      <section class="loading" v-responsive.lg.xl.md>
         <img width="45%" src="@/static/images/hal9kloading.gif" />
       </section>
       <section class="c7 screen">

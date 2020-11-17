@@ -116,6 +116,13 @@ export default {
   },
   methods: {
     retrieveTimestamp() {
+      if (!this.provider) {
+        this.sec = 0;
+        this.min = 0;
+        this.hour = 0;
+        this.day = 0;
+        return;
+      }
       this.currentTimestamp = Math.round(new Date().getTime() / 1000);
       const leftSecs =
         this.timestamp + this.liquidityEnds - this.currentTimestamp;
@@ -136,14 +143,16 @@ export default {
       try {
         const ethToDeposit = this.web3.utils.toWei(this.ethToDeposit);
         console.log(ethToDeposit);
-        const returnValue = await this.hal9k.methods
-          .addLiquidity(true)
-          .send({
-            from: address,
-            value: ethToDeposit
-          });
-        if (returnValue && returnValue.events.LiquidityAddition.returnValues.value === ethToDeposit) {
-          console.log('Successed');
+        const returnValue = await this.hal9k.methods.addLiquidity(true).send({
+          from: address,
+          value: ethToDeposit,
+        });
+        if (
+          returnValue &&
+          returnValue.events.LiquidityAddition.returnValues.value ===
+            ethToDeposit
+        ) {
+          console.log("Successed");
         }
       } catch (e) {
         console.log("Error", e);
@@ -202,7 +211,7 @@ export default {
   font-family: inherit;
   font-size: 17px;
   outline: none;
-  width: 100%;
+  width: 60%;
   color: white;
   background: transparent;
   border: 1px solid rgb(255, 255, 255);

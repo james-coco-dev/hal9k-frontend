@@ -95,6 +95,13 @@ section {
   }
 }
 
+@media screen and (max-width: 450px) {
+  section.screen.c1,
+  section.screen.c2 {
+    height: 400px;
+    flex: unset;
+  }
+}
 .blink {
   animation: blinker-one 1s linear infinite;
 }
