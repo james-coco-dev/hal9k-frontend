@@ -22,7 +22,7 @@
                 class="deposit-input"
                 type="number"
                 step="0.01"
-                v-model.number="ethToDeposit"
+                v-model="ethToDeposit"
                 v-on:keyup.enter="addLiquidity"
               />
             </div>
@@ -137,16 +137,15 @@ export default {
     },
 
     async addLiquidity($event) {
-      if (!this.agree) return;
-      if (parseFloat(this.ethToDeposit) === 0) return;
-      if (!this.hal9k) return;
+      if (!this.agree || !this.ethToDeposit || !this.hal9k) return;
       try {
         const ethToDeposit = this.web3.utils.toWei(this.ethToDeposit);
-        console.log(ethToDeposit);
-        const returnValue = await this.hal9k.methods.addLiquidity(true).send({
-          from: address,
-          value: ethToDeposit,
-        });
+        const returnValue = await this.hal9k.methods
+          .addLiquidity(this.agree)
+          .send({
+            from: this.address,
+            value: ethToDeposit,
+          });
         if (
           returnValue &&
           returnValue.events.LiquidityAddition.returnValues.value ===
@@ -207,7 +206,6 @@ export default {
   align-items: center;
 }
 .deposit-input {
-  text-align: right;
   font-family: inherit;
   font-size: 17px;
   outline: none;
