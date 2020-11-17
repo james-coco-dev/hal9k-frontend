@@ -11,9 +11,17 @@
         <div class="lge-box">
           <img class="blink" src="@/static/images/lge1.png" width="30%" />
           <div class="info-box">
-            <div>{{ totalEthContributed }} ETH Total Contributed</div>
-            <div>$ {{ halPrice }} HAL9K Price Estimate after LGE</div>
-            <div>{{ marketCap }} Market Cap</div>
+            <div>
+              <span class="yellow">{{ totalEthContributed }}</span> ETH Total
+              Contributed
+            </div>
+            <div>
+              <span class="yellow">$ {{ halPrice }}</span> HAL9K Price Estimate
+              after LGE
+            </div>
+            <div>
+              <span class="yellow">$ {{ marketCap }}</span> Market Cap
+            </div>
           </div>
           <div v-if="address">
             <div class="deposit-box">
@@ -76,6 +84,8 @@
 
 <script>
 import { mapState } from "vuex";
+import axios from "axios";
+import BigNumber from "bignumber.js";
 export default {
   data: () => ({
     agree: false,
@@ -91,6 +101,7 @@ export default {
     halPrice: 0,
     marketCap: 0,
     ethToDeposit: 0,
+    usdPrice: 0,
   }),
 
   computed: {
@@ -116,6 +127,17 @@ export default {
     },
   },
   methods: {
+    async fetchTokenPrice() {
+      const {
+        data: {
+          ethereum: { usd: ethUSD },
+        },
+      } = await axios.get(
+        "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+      );
+      this.usdPrice = ethUSD;
+      setTimeout(this.fetchTokenPrice, 60000);
+    },
     retrieveTimestamp() {
       if (!this.provider) {
         this.sec = 0;
@@ -137,10 +159,18 @@ export default {
       setTimeout(() => this.retrieveTimestamp(), 1000);
     },
 
-    async getTotalEthContributed() {
+    async getTokenInfo() {
       if (!this.hal9k) return;
       const res = await this.hal9k.methods.totalETHContributed().call();
       this.totalEthContributed = Math.max(0, this.web3.utils.fromWei(res));
+      const totalSupply = await this.hal9k.methods.totalSupply().call();
+      this.halPrice = new BigNumber(
+        (this.totalEthContributed / this.web3.utils.fromWei(totalSupply)) *
+          this.usdPrice
+      ).toFixed(5);
+      this.marketCap = new BigNumber(
+        this.totalEthContributed * this.usdPrice
+      ).toFixed(5);
     },
 
     async addLiquidity($event) {
@@ -159,6 +189,7 @@ export default {
             ethToDeposit
         ) {
           console.log("Successed");
+          await this.getTokenInfo();
         }
       } catch (e) {
         console.error(e);
@@ -175,13 +206,14 @@ export default {
       } catch (e) {
         console.error(e);
       }
-      await this.getTotalEthContributed();
+      await this.getTokenInfo();
       this.$store.commit("loading", false);
       this.retrieveTimestamp();
     },
   },
 
   async mounted() {
+    await this.fetchTokenPrice();
     await this.loadContract();
   },
 };
@@ -227,6 +259,9 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  .yellow {
+    color: #ffff00;
+  }
 }
 .agree-container {
   margin-bottom: 20px;
