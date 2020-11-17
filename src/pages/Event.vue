@@ -20,7 +20,7 @@
               <div>Deposit ETH:</div>
               <input
                 class="deposit-input"
-                type="number"
+                @keypress="onlyNumber"
                 step="0.01"
                 v-model="ethToDeposit"
                 v-on:keyup.enter="addLiquidity"
@@ -135,7 +135,13 @@ export default {
       this.day = Math.floor(leftSecs / 60 / 60 / 24);
       setTimeout(() => this.retrieveTimestamp(), 1000);
     },
-
+    onlyNumber ($event) {
+      //console.log($event.keyCode); //keyCodes value
+      let keyCode = ($event.keyCode ? $event.keyCode : $event.which);
+      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) { // 46 is dot
+          $event.preventDefault();
+      }
+    },
     async addLiquidity($event) {
       if (!this.agree || !this.hal9k || parseFloat(this.ethToDeposit) === 0) return;
       try {
