@@ -88,7 +88,6 @@ class Web3Wrapper {
         Artifact.rinkeby.hal9kVault
       );
       this.hal9kVault.setProvider(this.provider);
-
       this.hal9kv1Router = new this.web3.eth.Contract(
         Hal9kv1Router,
         Artifact.rinkeby.hal9kv1Router

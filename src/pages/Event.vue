@@ -117,7 +117,6 @@ export default {
       await this.loadContract();
     },
   },
-
   methods: {
     retrieveTimestamp() {
       this.currentTimestamp = Math.round(new Date().getTime() / 1000);
@@ -148,32 +147,14 @@ export default {
         const ethToDeposit = this.web3.utils.toWei(this.ethToDeposit);
         console.log(ethToDeposit);
         const returnValue = await this.hal9k.methods
-          .addLiquidity({
-            data: true,
-            from: this.address,
-            value: ethToDeposit,
-          })
-          .send();
-        console.log("Event Watching...", returnValue);
-        this.hal9k.events
-          .LiquidityAddition({}, (error, event) => {
-            console.log(event);
-          })
-          .on("data", (event, returnValues) => {
-            console.log(event);
-            if (event) {
-              console.log(
-                "Successfully deposited " +
-                  returnValues.value +
-                  " to " +
-                  returnValues.dst
-              );
-            }
-          })
-          .on("changed", (event) => {
-            console.log("changed", event);
-          })
-          .on("error", console.error);
+          .addLiquidity(true)
+          .send({
+            from: address,
+            value: ethToDeposit
+          });
+        if (returnValue && returnValue.events.LiquidityAddition.returnValues.value === ethToDeposit) {
+          console.log('Successed');
+        }
       } catch (e) {
         console.log("Error", e);
       }
