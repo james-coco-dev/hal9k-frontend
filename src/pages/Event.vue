@@ -137,7 +137,7 @@ export default {
     },
 
     async addLiquidity($event) {
-      if (!this.agree || !this.ethToDeposit || !this.hal9k) return;
+      if (!this.agree || !this.hal9k || parseFloat(this.ethToDeposit) === 0) return;
       try {
         const ethToDeposit = this.web3.utils.toWei(this.ethToDeposit);
         const returnValue = await this.hal9k.methods
