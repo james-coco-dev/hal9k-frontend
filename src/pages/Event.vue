@@ -123,7 +123,7 @@ export default {
       if (this.provider) await this.loadContract();
     },
     ethToDeposit() {
-      this.ethToDeposit = this.ethToDeposit.replace(/[^0-9.]/, "");
+      this.ethToDeposit = String(this.ethToDeposit).replace(/[^0-9.]/, "");
     },
   },
   methods: {
@@ -206,6 +206,10 @@ export default {
       } catch (e) {
         console.error(e);
       }
+      const balance = await this.web3.eth.getBalance(this.address);
+      this.ethToDeposit = new BigNumber(
+        this.web3.utils.fromWei(balance)
+      ).toFixed(2, 1);
       await this.getTokenInfo();
       this.$store.commit("loading", false);
       this.retrieveTimestamp();
@@ -251,6 +255,7 @@ export default {
   outline: none;
   width: 60%;
   color: white;
+  padding: 0 5px;
   background: transparent;
   border: 1px solid rgb(255, 255, 255);
 }
