@@ -52,6 +52,13 @@ export default {
   margin-top: 5rem;
   margin-bottom: 2rem;
 }
+@media screen and (max-width: 450px) {
+  .pool-container {
+    margin-top: 1rem;
+    width: 90%;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
 .pool-item {
   height: 100%;
   background: rgba(2, 18, 33, 0.85);

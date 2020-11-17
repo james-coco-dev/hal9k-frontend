@@ -30,7 +30,7 @@ class Web3Wrapper {
       this.disconnect();
     } else if (accounts[0] !== address) {
       store.commit("account/setAddress", accounts[0]);
-      store.commit("contract/changeFromAddress", account[0]);
+      store.commit("contract/changeFromAddress", accounts[0]);
     }
   };
 

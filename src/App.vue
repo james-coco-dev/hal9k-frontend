@@ -15,9 +15,9 @@ export default {
   computed: {
     ...mapState({
       loading: (state) => state.loading,
+      address: (state) => state.account.address,
     }),
   },
-  mounted() {},
 };
 </script>
 <style lang="scss">

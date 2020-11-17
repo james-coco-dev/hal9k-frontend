@@ -15,17 +15,17 @@
             <div>$ {{ halPrice }} HAL9K Price Estimate after LGE</div>
             <div>{{ marketCap }} Market Cap</div>
           </div>
-          <div class="deposit-box">
-            <div>Deposit ETH:</div>
-            <input
-              class="deposit-input"
-              id="deposit-input"
-              @keypress="onlyNumber"
-              v-model="ethToDeposit"
-              v-on:keyup.enter="addLiquidity"
-            />
-          </div>
           <div v-if="address">
+            <div class="deposit-box">
+              <div>Deposit ETH:</div>
+              <input
+                class="deposit-input"
+                type="number"
+                step="0.01"
+                v-model.number="ethToDeposit"
+                v-on:keyup.enter="addLiquidity"
+              />
+            </div>
             <div class="agree-container">
               <input type="checkbox" v-model="agree" id="agree-box" />
               <label for="agree-box">
@@ -78,9 +78,6 @@
 
 <script>
 import { mapState } from "vuex";
-import { Artifact } from "../utils/config";
-import Web3 from "web3";
-
 export default {
   data: () => ({
     agree: false,
@@ -114,10 +111,9 @@ export default {
   },
   watch: {
     async provider() {
-      await this.loadContract();
+      if (this.provider) await this.loadContract();
     },
   },
-
   methods: {
     retrieveTimestamp() {
       this.currentTimestamp = Math.round(new Date().getTime() / 1000);
@@ -132,14 +128,7 @@ export default {
       this.day = Math.floor(leftSecs / 60 / 60 / 24);
       setTimeout(() => this.retrieveTimestamp(), 1000);
     },
-    onlyNumber($event) {
-      //console.log($event.keyCode); //keyCodes value
-      let keyCode = $event.keyCode ? $event.keyCode : $event.which;
-      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
-        // 46 is dot
-        $event.preventDefault();
-      }
-    },
+
     async addLiquidity($event) {
       if (!this.agree) return;
       if (parseFloat(this.ethToDeposit) === 0) return;
@@ -227,12 +216,14 @@ export default {
   align-items: center;
 }
 .deposit-input {
-  width: 250px;
-  height: 25px;
   text-align: right;
-  font-family: orbitron, sans-serif;
+  font-family: inherit;
   font-size: 17px;
-  border: 0px solid black;
+  outline: none;
+  width: 100%;
+  color: white;
+  background: transparent;
+  border: 1px solid rgb(255, 255, 255);
 }
 .info-box {
   margin-top: 1rem;
@@ -251,6 +242,7 @@ export default {
     flex: 1;
   }
 }
+
 .liquidity-add-but {
   background: transparent;
   border: 1px solid white;

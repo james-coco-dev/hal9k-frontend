@@ -6,12 +6,9 @@ body {
   font-size: 0.8em;
   color: white;
 }
-@media screen and (max-width: 1368px) {
-  body {
-    font-size: 0.5em;
-  }
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
-
 main {
   display: flex;
   flex-direction: column;
@@ -36,6 +33,15 @@ main {
   flex-direction: row;
   gap: 60px;
 }
+
+@media screen and (max-width: 450px) {
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+}
+
 .screen .label {
   font-size: 1.1em;
   text-align: left;
