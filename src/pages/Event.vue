@@ -132,7 +132,7 @@
         const { address } = store.state.account;
         if (Metamask.hal9k) {
           try {
-            await Metamask.hal9k.methods.addLiquidity({ data: true, from: address, value: Metamask.web3.utils.toWei(this.ethToDeposit) }).call();
+            await Metamask.hal9k.methods.addLiquidity({ data: true, from: address, value: Metamask.web3.utils.toWei(this.ethToDeposit) }).send();
             console.log("Event Watching...");
             Metamask.hal9k.events.LiquidityAddition({}, (error, event) => {
               console.log(event);
