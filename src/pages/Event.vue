@@ -133,13 +133,19 @@
         if (Metamask.hal9k) {
           try {
             await Metamask.hal9k.methods.addLiquidity({ data: true, from: address, value: Metamask.web3.utils.toWei(this.ethToDeposit) }).call();
-            // let LiquidityAdditionEvent = Metamask.hal9k.LiquidityAuction();
-            // liquidityAuctionEvent.watch((err, result) => {
-            //   console.log(result);
-            //   if (result) {
-            //     console.log("Successfully deposited " + returnValues.value + " to " + returnValues.dst);
-            //   }
-            // })
+            console.log("Event Watching...");
+            Metamask.hal9k.events.LiquidityAddition({}, (error, event) => {
+              console.log(event);
+            }).on('data', (event, returnValues) => {
+                console.log(event);
+                if (event) {
+                  console.log("Successfully deposited " + returnValues.value + " to " + returnValues.dst);
+                }
+              })
+              .on('changed', (event) => {
+                console.log('changed', event);
+              })
+              .on('error', console.error);
           } catch (e) {
             console.log("Error", e);
           }
