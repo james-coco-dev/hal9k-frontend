@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { mapState } from "vuex";
 import { Artifact } from "../../utils/config";
 import BigNumber from "bignumber.js";
@@ -59,6 +60,7 @@ export default {
       address: (state) => state.account.address,
       hal9kVault: (state) => state.contract.hal9kVault,
       hal9kWethPair: (state) => state.contract.hal9kWethPair,
+      hal9kNftPool: (state) => state.contract.hal9kNftPool,
       web3: (state) => state.metamask.web3,
       provider: (state) => state.metamask.provider,
     }),
@@ -69,6 +71,21 @@ export default {
     },
   },
   methods: {
+    async getDaysPassedAfterStakingStart() {
+      //TODO: Test Needed
+      const passedDays = await this.hal9kNftPool.methods.getDaysPassedAfterStakingStart().call();
+      this.$snotify.info(passedDays);
+      return passedDays;
+    },
+    /****************** BACKEND CALL METHODS **********************/
+    async createUser(address, balance, startTime, stage) {
+      const userData = { address: address, balance: balance, lastUpdateTime: startTime, stage: stage };
+      const response = await axios.put("http://0.0.0.0:8080/hal9k-user", userData);
+      if (response.data === address) {
+        this.$snotify.info("Your NFT dropchance has started!");
+      }
+    },
+    /****************************************/
     async claim() {},
     async withdraw() {
       try {
@@ -87,7 +104,20 @@ export default {
           .deposit(0, this.web3.utils.toWei(this.stakeAmount))
           .send({ from: this.address });
         const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
-        if (tx) await this.checkVaultInfo();
+        if (tx) {
+          await this.checkVaultInfo();
+          //Start getting the NFT as reward
+          //TODO: Should update the smart contract
+          const returnValue = await this.hal9kNftPool.methods.startHal9KStaking().send({ from: this.address });
+          if (
+            returnValue &&
+            returnValue.events.startedHal9kStaking.returnValues.startedTime
+          ) {
+            this.$snotify.success("Staking started...");
+            //Tested Function
+            this.createUser(this.address, this.stakeAmount, returnValue.events.startedHal9kStaking.returnValues.startedTime, 0);
+          }
+        }
       } catch (error) {
         console.error(error);
       }
