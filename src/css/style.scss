@@ -106,6 +106,10 @@ section {
   animation: blinker-one 1s linear infinite;
 }
 
+.yellow {
+  color: #ffff00;
+}
+
 @keyframes blinker-one {
   0% {
     opacity: 0;

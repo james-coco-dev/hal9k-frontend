@@ -24,13 +24,13 @@
             </div>
           </div>
           <div v-if="address">
-            <div v-if="!liquidityEnds">
+            <div v-if="liquidityOngoing">
               <div class="deposit-box">
                 <div>Deposit ETH:</div>
                 <input
                   class="deposit-input"
                   v-model="ethToDeposit"
-                  v-on:keyup.enter="addLiquidity"
+                  @keyup.enter="addLiquidity"
                 />
               </div>
               <div class="agree-container">
@@ -70,7 +70,7 @@
             />
             <progress max="100" :value="value"></progress>
           </div>
-          <div class="left-day" v-if="!isFinished">
+          <div class="left-day" v-if="liquidityOngoing">
             <p>Liquidity Event Ends in</p>
             <p>{{ day }} days</p>
             <p>{{ hour }} hours</p>
@@ -106,6 +106,7 @@ export default {
     min: 0,
     sec: 0,
     totalEthContributed: 0,
+    liquidityOngoing: false,
     halPrice: 0,
     marketCap: 0,
     ethToDeposit: 0,
@@ -119,12 +120,6 @@ export default {
       web3: (state) => state.metamask.web3,
       provider: (state) => state.metamask.provider,
     }),
-    isFinished() {
-      return (
-        this.timestamp &&
-        this.timestamp + this.liquidityEnds < this.currentTimestamp
-      );
-    },
   },
   watch: {
     async provider() {
@@ -200,7 +195,6 @@ export default {
           returnValue.events.LiquidityAddition.returnValues.value ===
             ethToDeposit
         ) {
-          console.log("Successed");
           await this.getTokenInfo();
         }
       } catch (e) {
@@ -210,10 +204,10 @@ export default {
     async loadContract() {
       if (!this.hal9k) return;
       this.$store.commit("loading", true);
-      const liquidityOngoing = await this.hal9k.methods
+      this.liquidityOngoing = await this.hal9k.methods
         .liquidityGenerationOngoing()
         .call();
-      if (liquidityOngoing) {
+      if (this.liquidityOngoing) {
         try {
           const startTimestamp = await this.hal9k.methods
             .contractStartTimestamp()
@@ -236,7 +230,9 @@ export default {
           .LPGenerationCompleted()
           .call();
         if (!LPGenerationCompleted)
-          await this.hal9k.methods.addLiquidityToUniswapHAL9KxWETHPair().send();
+          await this.hal9k.methods
+            .addLiquidityToUniswapHAL9KxWETHPair()
+            .send({ from: this.address });
       }
       await this.getTokenInfo();
       this.$store.commit("loading", false);
@@ -291,9 +287,6 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  .yellow {
-    color: #ffff00;
-  }
 }
 .agree-container {
   margin-bottom: 20px;
