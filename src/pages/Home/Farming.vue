@@ -67,7 +67,7 @@ export default {
     async stake() {
       try {
         const { transactionHash } = await this.hal9kVault.methods
-          .deposit("0", this.web3.utils.toWei(this.stakeAmount))
+          .deposit(0, this.web3.utils.toWei(this.stakeAmount))
           .send({ from: this.address });
         console.log(transactionHash);
 
