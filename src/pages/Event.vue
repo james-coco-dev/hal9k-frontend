@@ -195,10 +195,11 @@ export default {
           returnValue.events.LiquidityAddition.returnValues.value ===
             ethToDeposit
         ) {
+          this.$snotify.success("Successfully deposited");
           await this.getTokenInfo();
         }
       } catch (e) {
-        console.error(e);
+        this.$snotify.error(e.message);
       }
     },
     async loadContract() {
@@ -218,7 +219,7 @@ export default {
           }
           this.timestamp = parseInt(startTimestamp);
         } catch (e) {
-          console.error(e);
+          this.$snotify.error(e.message);
         }
         const balance = await this.web3.eth.getBalance(this.address);
         this.ethToDeposit = new BigNumber(

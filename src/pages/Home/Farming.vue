@@ -97,7 +97,6 @@ export default {
         const allowance = await this.hal9kWethPair.methods
           .allowance(this.address, Artifact.rinkeby.hal9kVault)
           .call();
-        console.log(allowance);
         if (allowance > 0) this.isApproved = true;
       } catch (error) {
         console.error(error);

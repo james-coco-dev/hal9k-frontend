@@ -3,6 +3,7 @@
     <loading v-if="loading" />
     <nav-bar />
     <router-view />
+    <vue-snotify />
   </div>
 </template>
 <script>
