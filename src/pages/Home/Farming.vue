@@ -8,7 +8,9 @@
         HAL9K/ETH Stake Pool
       </p>
       <div class="info-box">
-        <div># APY</div>
+        <div>
+          <span class="yellow">{{ apy }}</span> APY
+        </div>
         <div>
           <span class="yellow">{{ totalStaked }}</span> Tokens Staked (total)
         </div>
@@ -45,6 +47,7 @@ import BigNumber from "bignumber.js";
 export default {
   data: () => ({
     totalStaked: 0,
+    apy: 0,
     stakeAmount: 0,
     yourStaked: 0,
     claimableHal9k: 0,
@@ -67,7 +70,17 @@ export default {
   },
   methods: {
     async claim() {},
-    async withdraw() {},
+    async withdraw() {
+      try {
+        const { transactionHash } = await this.hal9kVault.methods
+          .withdraw(0, this.web3.utils.toWei(this.stakeAmount))
+          .send({ from: this.address });
+        const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
+        if (tx) await this.checkVaultInfo();
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async stake() {
       try {
         const { transactionHash } = await this.hal9kVault.methods
