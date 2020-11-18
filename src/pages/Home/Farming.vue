@@ -16,6 +16,9 @@
           <span class="yellow">{{ yourStaked }}</span> Tokens Staked (yours)
         </div>
         <div>
+          <span class="yellow">{{ rewardDebt }}</span> Reward Debt (yours)
+        </div>
+        <div>
           <span class="yellow">{{ claimableHal9k }}</span> Claimable HAL9K
         </div>
       </div>
@@ -46,6 +49,7 @@ export default {
     yourStaked: 0,
     claimableHal9k: 0,
     isApproved: false,
+    rewardDebt: 0,
   }),
   computed: {
     ...mapState({
@@ -69,10 +73,8 @@ export default {
         const { transactionHash } = await this.hal9kVault.methods
           .deposit(0, this.web3.utils.toWei(this.stakeAmount))
           .send({ from: this.address });
-        console.log(transactionHash);
-
         const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
-        console.log(tx);
+        if (tx) await this.checkVaultInfo();
       } catch (error) {
         console.error(error);
       }
@@ -82,7 +84,7 @@ export default {
         const res = await this.hal9kWethPair.methods
           .approve(
             Artifact.rinkeby.hal9kVault,
-            new BigNumber(10).pow(new BigNumber(40)).toFixed()
+            new BigNumber(10).pow(new BigNumber(60)).toFixed()
           )
           .send({ from: this.address });
         if (res.transactionHash) await this.checkAllowance();
@@ -95,19 +97,32 @@ export default {
         const allowance = await this.hal9kWethPair.methods
           .allowance(this.address, Artifact.rinkeby.hal9kVault)
           .call();
-        if (
-          new BigNumber(allowance).isEqualTo(
-            new BigNumber(10).pow(new BigNumber(40))
-          )
-        )
-          this.isApproved = true;
+        console.log(allowance);
+        if (allowance > 0) this.isApproved = true;
       } catch (error) {
         console.error(error);
         this.isApproved = false;
       }
     },
+    async checkVaultInfo() {
+      try {
+        const res = await this.hal9kWethPair.methods
+          .balanceOf(Artifact.rinkeby.hal9kVault)
+          .call();
+        this.totalStaked = this.web3.utils.fromWei(res);
+        const { amount, rewardDebt } = await this.hal9kVault.methods
+          .userInfo(0, this.address)
+          .call();
+        this.yourStaked = this.web3.utils.fromWei(amount);
+        this.rewardDebt = this.web3.utils.fromWei(rewardDebt);
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async loadContract() {
+      if (!this.hal9kWethPair) return;
       await this.checkAllowance();
+      await this.checkVaultInfo();
     },
   },
   async mounted() {
