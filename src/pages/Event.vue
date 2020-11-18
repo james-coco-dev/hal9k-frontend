@@ -24,31 +24,38 @@
             </div>
           </div>
           <div v-if="address">
-            <div class="deposit-box">
-              <div>Deposit ETH:</div>
-              <input
-                class="deposit-input"
-                v-model="ethToDeposit"
-                v-on:keyup.enter="addLiquidity"
-              />
+            <div v-if="!liquidityEnds">
+              <div class="deposit-box">
+                <div>Deposit ETH:</div>
+                <input
+                  class="deposit-input"
+                  v-model="ethToDeposit"
+                  v-on:keyup.enter="addLiquidity"
+                />
+              </div>
+              <div class="agree-container">
+                <input type="checkbox" v-model="agree" id="agree-box" />
+                <label for="agree-box">
+                  I understand that this contract is provided with no warranty
+                  of any kind. I agree to not hold the contract creators, HAL9K
+                  team members or anyone associated with this event liable for
+                  any damage monetary and otherwise I might occur. I understand
+                  that any smart contract interaction carries an inherent risk.
+                </label>
+              </div>
+              <button
+                class="event-but"
+                :disabled="!agree"
+                @click="addLiquidity"
+              >
+                ADD LIQUIDITY AND GET LP TOKENS
+              </button>
             </div>
-            <div class="agree-container">
-              <input type="checkbox" v-model="agree" id="agree-box" />
-              <label for="agree-box">
-                I understand that this contract is provided with no warranty of
-                any kind. I agree to not hold the contract creators, HAL9K team
-                members or anyone associated with this event liable for any
-                damage monetary and otherwise I might occur. I understand that
-                any smart contract interaction carries an inherent risk.
-              </label>
+            <div v-else>
+              <button class="event-but" @click="claimLpToken">
+                CLAIM LP TOKENS
+              </button>
             </div>
-            <button
-              class="liquidity-add-but"
-              :disabled="!agree"
-              v-on:click="addLiquidity"
-            >
-              ADD LIQUIDITY AND GET LP TOKENS
-            </button>
           </div>
         </div>
       </section>
@@ -92,7 +99,8 @@ export default {
     value: 0,
     timestamp: 0,
     currentTimestamp: 0,
-    liquidityEnds: 7 * 24 * 60 * 60,
+    //liquidityEnds: 7 * 24 * 60 * 60,
+    liquidityEnds: 10 * 60,
     day: 0,
     hour: 0,
     min: 0,
@@ -172,7 +180,11 @@ export default {
         this.totalEthContributed * this.usdPrice
       ).toFixed(5);
     },
-
+    async claimLpToken() {
+      await this.hal9k.methods.claimLPTokens().send({
+        from: this.address,
+      });
+    },
     async addLiquidity($event) {
       if (!this.agree || !this.hal9k || !parseFloat(this.ethToDeposit)) return;
       try {
@@ -198,21 +210,36 @@ export default {
     async loadContract() {
       if (!this.hal9k) return;
       this.$store.commit("loading", true);
-      try {
-        const startTimestamp = await this.hal9k.methods
-          .contractStartTimestamp()
+      const liquidityOngoing = await this.hal9k.methods
+        .liquidityGenerationOngoing()
+        .call();
+      if (liquidityOngoing) {
+        try {
+          const startTimestamp = await this.hal9k.methods
+            .contractStartTimestamp()
+            .call();
+          if (startTimestamp <= 0) {
+            this.$store.commit("loading", false);
+            return;
+          }
+          this.timestamp = parseInt(startTimestamp);
+        } catch (e) {
+          console.error(e);
+        }
+        const balance = await this.web3.eth.getBalance(this.address);
+        this.ethToDeposit = new BigNumber(
+          this.web3.utils.fromWei(balance)
+        ).toFixed(2, 1);
+        this.retrieveTimestamp();
+      } else {
+        const LPGenerationCompleted = await this.hal9k.methods
+          .LPGenerationCompleted()
           .call();
-        this.timestamp = parseInt(startTimestamp);
-      } catch (e) {
-        console.error(e);
+        if (!LPGenerationCompleted)
+          await this.hal9k.methods.addLiquidityToUniswapHAL9KxWETHPair().send();
       }
-      const balance = await this.web3.eth.getBalance(this.address);
-      this.ethToDeposit = new BigNumber(
-        this.web3.utils.fromWei(balance)
-      ).toFixed(2, 1);
       await this.getTokenInfo();
       this.$store.commit("loading", false);
-      this.retrieveTimestamp();
     },
   },
 
@@ -280,7 +307,7 @@ export default {
   }
 }
 
-.liquidity-add-but {
+.event-but {
   background: transparent;
   border: 1px solid white;
   color: white;
