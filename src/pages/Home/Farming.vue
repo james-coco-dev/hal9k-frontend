@@ -43,7 +43,7 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-import { Artifact } from "../../utils/config";
+import { Artifact, API_URL } from "../../utils/config";
 import BigNumber from "bignumber.js";
 export default {
   data: () => ({
@@ -71,22 +71,51 @@ export default {
     },
   },
   methods: {
+    /****************** SMART CONTRACT METHODS **********************/
     async getDaysPassedAfterStakingStart() {
       //TODO: Test Needed
       const passedDays = await this.hal9kNftPool.methods.getDaysPassedAfterStakingStart().call();
-      this.$snotify.info(passedDays);
+      console.log(passedDays);
       return passedDays;
+    },
+    async getDaysPassedAfterLastUpdateTime() {
+      const passedDays = await this.hal9kNftPool.methods.getDaysPassedAfterLastUpdateTime().call();
+      console.log(passedDays);
+      return passedDays;
+    },
+    async getCurrentStage() {
+      const currentStage = await this.hal9kNftPool.methods.getCurrentStage().call();
+      console.log(currentStage);
+      return currentStage;
+    },
+    async moveStage(backOrForth) {
+      // Back if true, Forth if false  
+      const returnValue = await this.hal9kNftPool.methods.moveStageBackOrForth().send({ from: this.account });
+      if (
+        returnValue &&
+        returnValue.events.stageUpdated.returnValues.stage
+      ) {
+        this.$snotify.success("Stage updated...");
+        this.updateUser(this.address, returnValue.events.stageUpdated.returnValues.stage,  returnValue.events.stageUpdated.returnValues.lastUpdateTime);
+      }
     },
     /****************** BACKEND CALL METHODS **********************/
     async createUser(address, balance, startTime, stage) {
       const userData = { address: address, balance: balance, lastUpdateTime: startTime, stage: stage };
-      const response = await axios.put("http://0.0.0.0:8080/hal9k-user", userData);
+      const response = await axios.put(API_URL + "/hal9k-user", userData);
       if (response.data === address) {
         this.$snotify.info("Your NFT dropchance has started!");
       }
     },
+    async updateUser(address, stage, lastUpdateTime, balance) {
+      const userData = { address: address, stage: stage, lastUpdateTime: lastUpdateTime, balance: balance };
+      const response = await axios.put(API_URL + "/hal9k-user", userData);
+      console.log("Successfully updated the user :", response);
+    },
     /****************************************/
-    async claim() {},
+    async claim() {
+      //TODO: Implement claim function
+    },
     async withdraw() {
       try {
         const { transactionHash } = await this.hal9kVault.methods
@@ -109,6 +138,7 @@ export default {
           //Start getting the NFT as reward
           //TODO: Should update the smart contract
           const returnValue = await this.hal9kNftPool.methods.startHal9KStaking().send({ from: this.address });
+          console.log(returnValue);
           if (
             returnValue &&
             returnValue.events.startedHal9kStaking.returnValues.startedTime
