@@ -1,7 +1,7 @@
 require("dotenv").config();
 
-export const API_URL = process.env.NODE_ENV === "development" ? "http://0.0.0.0:8080/" : 
-  process.env.NODE_ENV === 'production' ? "http://api.hal9k.ai/" : "";
+export const API_URL = process.env.NODE_ENV === "development" ? "http://0.0.0.0:8080" : 
+  process.env.NODE_ENV === 'production' ? "http://api.hal9k.ai" : "";
 console.log("API_URL : ", API_URL);
 
 export const POOLS_KEY = "https://api.hal9k.ai/pools/";

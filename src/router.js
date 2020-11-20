@@ -5,6 +5,9 @@ import Farming from "@/pages/Home/Farming";
 import Tokenomics from "@/pages/Home/Tokenomics";
 import Event from "@/pages/Event";
 import Shop from "@/pages/Shop";
+import MyGallery from '@/pages/MyGallery';
+import Dropchance from '@/pages/Dropchance';
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -32,6 +35,16 @@ const routes = [
     path: "/shop",
     name: "Shop",
     component: Shop,
+  },
+  {
+    path: "/dropchance",
+    name: "Dropchance",
+    component: Dropchance,
+  },
+  {
+    path: "/gallery",
+    name: "My Gallery",
+    component: MyGallery,
   },
 ];
 const router = new VueRouter({

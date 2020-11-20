@@ -8,8 +8,10 @@
       MENU
       <div class="menu-list" v-if="isOpened" @click="isOpened = false">
         <router-link class="menu-item" to="/">MAIN CONSOLE</router-link>
-        <router-link class="menu-item" to="/shop">NFT GALLERY</router-link>
         <router-link class="menu-item" to="/event">LGE EVENT</router-link>
+        <router-link class="menu-item" to="/shop">NFT SHOP</router-link>
+        <router-link class="menu-item" to="/gallery">MY GALLERY</router-link>
+        <router-link class="menu-item" to="/dropchance">NFT REWARD</router-link>
       </div>
     </div>
   </section>
