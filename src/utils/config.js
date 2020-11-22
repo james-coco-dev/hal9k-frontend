@@ -28,17 +28,17 @@ export const Artifact = {
 // NOTE: This NFT config is all changeable 
 export const NFTConfig = {
   NumberOfNFTsByClass: {
-    common: [1000, 1000, 1000, 1000],
-    rare: [250, 250, 250],
-    epic: [100, 100],
-    legendary: [25],
-    upgrade: [25],
+    common: [2500, 2500, 2500, 2500],
+    rare: [100, 100, 100],
+    epic: [30, 30],
+    legendary: [3],
+    upgrade: [150],
   },
   // Stage number starts from 1. So you have to wait 1 day to get on stage 1.
   // and need to wait 2 more to get on stage 2 ...
   // after stage 3, we'll use the same variable as in stage 3 
   DaysToWaitPerStage: [1, 2, 2], 
-  NumberOfNFTsPerStage: {
+  NumberOfUpgradesPerStage: {
     stage1: [],
     stage2: [],
     stage3: [],
@@ -49,9 +49,9 @@ export const NFTConfig = {
   // and a dropchance of 90%, then you need to select 45 wallets for the common card
   // Here the drop chance percentage determines how many wallet addresses we'll choose among all LP holders who kept LP for 1 day in Stage 1.
   DropChanceByStage: {
-    stage1: [98, 1.75, 0.25, 0],
-    stage2: [60, 37, 2.8, 0.2],
-    stage3: [50, 40, 7.3, 2.7],
+    stage1: [30, 0.5, 0.1, 0],
+    stage2: [40, 1, 0.2, 0.02],
+    stage3: [50, 2, 0.4, 0.05],
   }
   // After user claims his NFT in certain stage, we should move him one stage back.
   // So we should enable them either claim NFT or Move to the next stage, not both at the same time.

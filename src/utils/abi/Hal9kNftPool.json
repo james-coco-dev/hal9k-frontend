@@ -49,11 +49,105 @@
             {
                 "indexed": false,
                 "internalType": "uint256",
+                "name": "cardId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "burnAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "burned",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "addr",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "cardId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "mintAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "minted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "addr",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
                 "name": "stage",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "lastUpdateTime",
                 "type": "uint256"
             }
         ],
         "name": "stageUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "addr",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "newAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "stakeAmountUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "addr",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "startedTime",
+                "type": "uint256"
+            }
+        ],
+        "name": "startedHal9kStaking",
         "type": "event"
     },
     {
@@ -80,11 +174,6 @@
             {
                 "internalType": "uint256",
                 "name": "_pid",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_stakedAmount",
                 "type": "uint256"
             },
             {
@@ -130,6 +219,19 @@
             {
                 "internalType": "uint256",
                 "name": "stage",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getDaysPassedAfterLastUpdateTime",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
                 "type": "uint256"
             }
         ],
@@ -202,31 +304,7 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "lpUserAddress",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
                 "name": "_pid",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_stakedAmount",
                 "type": "uint256"
             },
             {
@@ -292,8 +370,14 @@
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "startHal9KStaking",
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "stakeAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "startHal9kStaking",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -307,6 +391,19 @@
             }
         ],
         "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "newAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateStakeAmount",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
