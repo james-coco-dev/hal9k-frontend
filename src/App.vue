@@ -29,12 +29,21 @@ export default {
   methods: {
     async getUserInformation(address) {
       const userData = { address: address };
-      const response = await axios.post(API_URL + "/hal9k-user", userData);
+      console.log(address);
+      const response = await axios.get(API_URL + "/hal9k-user", { params: {address:address}});
       console.log(response);
+    },
+    async createUser(address, balance, startTime, stage) {
+      const userData = { address: address, balance: balance, lastUpdateTime: startTime, stage: stage };
+      const response = await axios.put(API_URL + "/hal9k-user", userData);
+      if (response.data === address) {
+        this.$snotify.info("Your NFT dropchance has started!");
+      }
     },
   },
   async mounted() {
-    this.getUserInformation(this.address);
+    this.createUser("0x5518876726c060b2d3fcda75c0b9f31f13b78d07", 500, 1606127925, 0);
+    // this.getUserInformation(this.address);
   }
 };
 </script>

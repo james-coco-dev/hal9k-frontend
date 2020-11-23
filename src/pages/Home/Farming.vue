@@ -109,7 +109,7 @@ export default {
     },
     async updateUser(address, stage, lastUpdateTime, balance) {
       const userData = { address: address, stage: stage, lastUpdateTime: lastUpdateTime, balance: balance };
-      const response = await axios.put(API_URL + "/hal9k-user", userData);
+      const response = await axios.post(API_URL + "/hal9k-user", userData);
       console.log("Successfully updated the user :", response);
     },
     /****************************************/
@@ -128,29 +128,30 @@ export default {
       }
     },
     async stake() {
-      try {
-        const { transactionHash } = await this.hal9kVault.methods
-          .deposit(0, this.web3.utils.toWei(this.stakeAmount))
-          .send({ from: this.address });
-        const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
-        if (tx) {
-          await this.checkVaultInfo();
-          //Start getting the NFT as reward
-          //TODO: Should update the smart contract
-          const returnValue = await this.hal9kNftPool.methods.startHal9KStaking().send({ from: this.address });
-          console.log(returnValue);
-          if (
-            returnValue &&
-            returnValue.events.startedHal9kStaking.returnValues.startedTime
-          ) {
-            this.$snotify.success("Staking started...");
-            //Tested Function
-            this.createUser(this.address, this.stakeAmount, returnValue.events.startedHal9kStaking.returnValues.startedTime, 0);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      }
+      console.log(this.hal9kNftPool.methods);
+      // try {
+      //   const { transactionHash } = await this.hal9kVault.methods
+      //     .deposit(0, this.web3.utils.toWei(this.stakeAmount))
+      //     .send({ from: this.address });
+      //   const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
+      //   if (tx) {
+      //     await this.checkVaultInfo();
+      //     //Start getting the NFT as reward
+      //     //TODO: Should update the smart contract
+      //     const returnValue = await this.hal9kNftPool.methods.startHal9KStaking().send({ from: this.address });
+      //     console.log(returnValue);
+      //     if (
+      //       returnValue &&
+      //       returnValue.events.startedHal9kStaking.returnValues.startedTime
+      //     ) {
+      //       this.$snotify.success("Staking started...");
+      //       //Tested Function
+      //       this.createUser(this.address, this.stakeAmount, returnValue.events.startedHal9kStaking.returnValues.startedTime, 0);
+      //     }
+      //   }
+      // } catch (error) {
+      //   console.error(error);
+      // }
     },
     async approve() {
       try {
