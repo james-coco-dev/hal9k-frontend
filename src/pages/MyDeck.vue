@@ -28,7 +28,6 @@ import axios from "axios";
 //import { POOLS_KEY } from "@/utils/config";
 export default {
   data: () => ({
-    stage: 1,
     myDeck: [
       {
         //this is an example, should be retrieve from the backend or contract
@@ -39,6 +38,11 @@ export default {
       },
     ],
   }),
+  computed: {
+    ...mapState({
+      stage: (state) => state.account.stage,
+    }),
+  },
   mounted() {},
   methods: {},
 };
