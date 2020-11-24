@@ -21,7 +21,7 @@ export default {
       state.balance = balance;
       state.lastUpdateTime = lastUpdateTime;
       state.stage = stage;
-    }
+    },
   },
   actions: {
     clearAccount({ commit, state }) {
@@ -29,7 +29,7 @@ export default {
         balance: null,
         lastUpdateTime: null,
         stage: null,
-      })
+      });
     },
     disconnect({ commit, state }) {
       commit("setAddress", null);
@@ -38,7 +38,7 @@ export default {
         balance: null,
         lastUpdateTime: null,
         stage: null,
-      })
+      });
     },
   },
 };

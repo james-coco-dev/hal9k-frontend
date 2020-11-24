@@ -1,55 +1,94 @@
 <template>
-  <div class="shop-page">
+  <div>
     <div class="background-1"></div>
+
     <div class="signal">
       <img src="@/static/images/glow-mobile.gif" />
     </div>
-    <div class="pool-container">
-      <div v-for="(nft, index) in pools" :key="index" class="pool-item">
-        <div class="pool-image">
-          <img :src="nft.image" :alt="nft.name" />
-          <div class="supply">{{ nft.max_supply }} Minted</div>
+    <div class="caption">NFT Reward</div>
+    <div class="row drop-container">
+      <section class="d1 screen">
+        <p class="label">NFT</p>
+        <div class="nft-box">
+          <pool-item :pools="pools" :hasButton="false" />
         </div>
-        <div class="pool-info">
-          <div class="nft-name">{{ nft.name }}</div>
-          <div class="nft-description">{{ nft.description }}</div>
-          <button class="opensea-button">Check Open Sea</button>
+      </section>
+      <section class="e2 screen">
+        <p class="label">Upgrade</p>
+        <div class="upgrade-box">
+          <div class="stage-box">
+            <img src="@/static/images/stagelabel.png" width="30%" />
+            <div class="stage-label">3</div>
+          </div>
+          <div>Lorem</div>
+          <div class="button-group">
+            <button class="button-4" @click="upgrade">Upgrade</button>
+            <button class="button-4" @click="claim">Claim</button>
+          </div>
         </div>
-      </div>
+      </section>
+      <section class="screen">
+        <p class="label">Chart</p>
+        <img width="100%" src="@/static/images/upchart.jpg" />
+      </section>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import axios from "axios";
-import { POOLS_KEY } from "@/utils/config";
+import PoolItem from "../components/PoolItem.vue";
+//import axios from "axios";
 export default {
   data: () => ({
-    pools: [],
+    pools: [
+      {
+        //this is an example, should be retrieve from the backend or contract
+        id: 1,
+        image: "https://images.hal9k.ai/Chair_1x1.jpg",
+        name: "Chair",
+        description: "Common chair",
+        max_supply: 2500,
+      },
+    ],
   }),
+  components: { PoolItem },
+
   computed: {
     ...mapState({
-      address: (state) => state.account.address,
-      hal9kVault: (state) => state.contract.hal9kVault,
-      hal9kWethPair: (state) => state.contract.hal9kWethPair,
-      hal9kNftPool: (state) => state.contract.hal9kNftPool,
-      web3: (state) => state.metamask.web3,
-      provider: (state) => state.metamask.provider,
+      stage: (state) => state.account.stage,
     }),
   },
-  async mounted() {
-    await this.onSelectPool("V1968");
-  },
   methods: {
-    async onSelectPool(pool) {
-      this.loading = true;
-      this.$store.commit("loading", true);
-      const { data } = await axios.get(POOLS_KEY + pool);
-      this.$store.commit("loading", false);
-      this.pools = data;
-    },
+    upgrade() {},
+    claim() {},
   },
+
+  mounted() {},
 };
 </script>
-<style lang="scss" scoped></style>
+
+<style lang="scss" scoped>
+.stage-box {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  .stage-label {
+    font-size: 2.5rem;
+  }
+}
+.drop-container {
+  margin: 2rem 2rem;
+}
+.nft-box {
+  width: 70%;
+  margin: auto;
+}
+.upgrade-box {
+  padding: 1rem;
+  font-size: 1.2em;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+</style>

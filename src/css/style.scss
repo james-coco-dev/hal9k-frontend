@@ -70,7 +70,9 @@ section {
   }
   &.c1 {
     background: #0057b7;
-    flex: 1;
+  }
+  &.d1 {
+    background: #296baa;
   }
   &.c2 {
     background-size: cover;
@@ -158,6 +160,15 @@ button {
   text-decoration: none;
 }
 
+.button-4 {
+  font-size: 1rem;
+  border: 1px solid white;
+  background-color: transparent;
+  color: white;
+  margin-right: 10px;
+  text-decoration: none;
+}
+
 .button-group {
   display: flex;
   flex-direction: row;
@@ -223,4 +234,10 @@ progress[value]::-webkit-progress-value {
 }
 .mb2 {
   margin-bottom: 2rem;
+}
+
+.caption {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 10px;
 }

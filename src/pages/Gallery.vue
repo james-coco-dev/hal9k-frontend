@@ -4,18 +4,13 @@
     <div class="signal">
       <img src="@/static/images/glow-mobile.gif" />
     </div>
+    <div class="caption">NFT Gallery</div>
     <div class="pool-container">
-      <div v-for="(nft, index) in pools" :key="index" class="pool-item">
-        <div class="pool-image">
-          <img :src="nft.image" :alt="nft.name" />
-          <div class="supply">{{ nft.max_supply }} Minted</div>
-        </div>
-        <div class="pool-info">
-          <div class="nft-name">{{ nft.name }}</div>
-          <div class="nft-description">{{ nft.description }}</div>
-          <button class="button-3">Check Open Sea</button>
-        </div>
-      </div>
+      <pool-item
+        :pools="pools"
+        buttonText="Check Open Sea"
+        @click="checkOpenSea"
+      />
     </div>
   </div>
 </template>
@@ -23,15 +18,20 @@
 <script>
 import { mapState } from "vuex";
 import axios from "axios";
+import PoolItem from "@/components/PoolItem";
 import { POOLS_KEY } from "@/utils/config";
 export default {
   data: () => ({
     pools: [],
   }),
+  components: {
+    PoolItem,
+  },
   async mounted() {
     await this.onSelectPool("V1968");
   },
   methods: {
+    checkOpenSea(id) {},
     async onSelectPool(pool) {
       this.loading = true;
       this.$store.commit("loading", true);
