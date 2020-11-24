@@ -103,7 +103,7 @@ export default {
     async createUser(address, balance, startTime, stage) {
       const userData = { address: address, balance: balance, lastUpdateTime: startTime, stage: stage };
       const response = await axios.put(API_URL + "/hal9k-user", userData);
-      if (response.data === address) {
+      if (response.data.address) {
         this.$snotify.info("Your NFT dropchance has started!");
       }
     },
