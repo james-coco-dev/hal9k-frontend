@@ -18,7 +18,7 @@
         <div class="upgrade-box">
           <div class="stage-box">
             <img src="@/static/images/stagelabel.png" width="30%" />
-            <div class="stage-label">3</div>
+            <div class="stage-label">{{ stage }}</div>
           </div>
           <div>Lorem</div>
           <div class="button-group">
