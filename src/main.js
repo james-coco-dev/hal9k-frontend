@@ -21,6 +21,7 @@ Amplify.configure(aws_exports);
 //////////////////////////////
 Vue.use(Snotify, {
   toast: {
+    timeout: 5000,
     position: SnotifyPosition.rightTop,
   },
 });

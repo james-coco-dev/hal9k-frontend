@@ -74,41 +74,60 @@ export default {
     /****************** SMART CONTRACT METHODS **********************/
     async getDaysPassedAfterStakingStart() {
       //TODO: Test Needed
-      const passedDays = await this.hal9kNftPool.methods.getDaysPassedAfterStakingStart().call();
+      const passedDays = await this.hal9kNftPool.methods
+        .getDaysPassedAfterStakingStart()
+        .call();
       console.log(passedDays);
       return passedDays;
     },
     async getDaysPassedAfterLastUpdateTime() {
-      const passedDays = await this.hal9kNftPool.methods.getDaysPassedAfterLastUpdateTime().call();
+      const passedDays = await this.hal9kNftPool.methods
+        .getDaysPassedAfterLastUpdateTime()
+        .call();
       console.log(passedDays);
       return passedDays;
     },
     async getCurrentStage() {
-      const currentStage = await this.hal9kNftPool.methods.getCurrentStage().call();
+      const currentStage = await this.hal9kNftPool.methods
+        .getCurrentStage()
+        .call();
       console.log(currentStage);
       return currentStage;
     },
     async moveStage(backOrForth) {
-      // Back if true, Forth if false  
-      const returnValue = await this.hal9kNftPool.methods.moveStageBackOrForth().send({ from: this.account });
-      if (
-        returnValue &&
-        returnValue.events.stageUpdated.returnValues.stage
-      ) {
+      // Back if true, Forth if false
+      const returnValue = await this.hal9kNftPool.methods
+        .moveStageBackOrForth()
+        .send({ from: this.account });
+      if (returnValue && returnValue.events.stageUpdated.returnValues.stage) {
         this.$snotify.success("Stage updated...");
-        this.updateUser(this.address, returnValue.events.stageUpdated.returnValues.stage,  returnValue.events.stageUpdated.returnValues.lastUpdateTime);
+        this.updateUser(
+          this.address,
+          returnValue.events.stageUpdated.returnValues.stage,
+          returnValue.events.stageUpdated.returnValues.lastUpdateTime
+        );
       }
     },
     /****************** BACKEND CALL METHODS **********************/
     async createUser(address, balance, startTime, stage) {
-      const userData = { address: address, balance: balance, lastUpdateTime: startTime, stage: stage };
+      const userData = {
+        address: address,
+        balance: balance,
+        lastUpdateTime: startTime,
+        stage: stage,
+      };
       const response = await axios.put(API_URL + "/hal9k-user", userData);
       if (response.data.address) {
         this.$snotify.info("Your NFT dropchance has started!");
       }
     },
     async updateUser(address, stage, lastUpdateTime, balance) {
-      const userData = { address: address, stage: stage, lastUpdateTime: lastUpdateTime, balance: balance };
+      const userData = {
+        address: address,
+        stage: stage,
+        lastUpdateTime: lastUpdateTime,
+        balance: balance,
+      };
       const response = await axios.post(API_URL + "/hal9k-user", userData);
       console.log("Successfully updated the user :", response);
     },
@@ -124,34 +143,43 @@ export default {
         const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
         if (tx) await this.checkVaultInfo();
       } catch (error) {
+        this.$snotify.error(error.message);
         console.error(error);
       }
     },
     async stake() {
-      console.log(this.hal9kNftPool.methods);
-      // try {
-      //   const { transactionHash } = await this.hal9kVault.methods
-      //     .deposit(0, this.web3.utils.toWei(this.stakeAmount))
-      //     .send({ from: this.address });
-      //   const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
-      //   if (tx) {
-      //     await this.checkVaultInfo();
-      //     //Start getting the NFT as reward
-      //     //TODO: Should update the smart contract
-      //     const returnValue = await this.hal9kNftPool.methods.startHal9KStaking().send({ from: this.address });
-      //     console.log(returnValue);
-      //     if (
-      //       returnValue &&
-      //       returnValue.events.startedHal9kStaking.returnValues.startedTime
-      //     ) {
-      //       this.$snotify.success("Staking started...");
-      //       //Tested Function
-      //       this.createUser(this.address, this.stakeAmount, returnValue.events.startedHal9kStaking.returnValues.startedTime, 0);
-      //     }
-      //   }
-      // } catch (error) {
-      //   console.error(error);
-      // }
+      try {
+        const { transactionHash } = await this.hal9kVault.methods
+          .deposit(0, this.web3.utils.toWei(this.stakeAmount))
+          .send({ from: this.address });
+        const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
+        if (tx) {
+          await this.checkVaultInfo();
+          this.$snotify.success("Deposit succeed...");
+          //Start getting the NFT as reward
+          //TODO: Should update the smart contract
+          const returnValue = await this.hal9kNftPool.methods
+            .startHal9kStaking(this.web3.utils.toWei(this.stakeAmount))
+            .send({ from: this.address });
+          console.log(returnValue);
+          if (
+            returnValue &&
+            returnValue.events.startedHal9kStaking.returnValues.startedTime
+          ) {
+            this.$snotify.success("Staking started...");
+            //Tested Function
+            this.createUser(
+              this.address,
+              this.stakeAmount,
+              returnValue.events.startedHal9kStaking.returnValues.startedTime,
+              0
+            );
+          }
+        }
+      } catch (error) {
+        this.$snotify.error(error.message);
+        console.error(error);
+      }
     },
     async approve() {
       try {
@@ -163,6 +191,7 @@ export default {
           .send({ from: this.address });
         if (res.transactionHash) await this.checkAllowance();
       } catch (err) {
+        this.$snotify.error(error.message);
         console.error(err.message);
       }
     },
@@ -173,6 +202,7 @@ export default {
           .call();
         if (allowance > 0) this.isApproved = true;
       } catch (error) {
+        this.$snotify.error(error.message);
         console.error(error);
         this.isApproved = false;
       }
@@ -189,6 +219,7 @@ export default {
         this.yourStaked = this.web3.utils.fromWei(amount);
         this.rewardDebt = this.web3.utils.fromWei(rewardDebt);
       } catch (error) {
+        this.$snotify.error(error.message);
         console.error(error);
       }
     },
