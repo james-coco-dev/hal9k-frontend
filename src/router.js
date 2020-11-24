@@ -4,9 +4,9 @@ import Welcome from "@/pages/Home/Welcome";
 import Farming from "@/pages/Home/Farming";
 import Tokenomics from "@/pages/Home/Tokenomics";
 import Event from "@/pages/Event";
-import Shop from "@/pages/Shop";
-import MyGallery from '@/pages/MyGallery';
-import Dropchance from '@/pages/Dropchance';
+import Gallery from "@/pages/Gallery";
+import MyDeck from "@/pages/MyDeck";
+import Drop from "@/pages/Drop";
 
 Vue.use(VueRouter);
 
@@ -32,19 +32,19 @@ const routes = [
     component: Event,
   },
   {
-    path: "/shop",
-    name: "Shop",
-    component: Shop,
-  },
-  {
-    path: "/dropchance",
-    name: "Dropchance",
-    component: Dropchance,
-  },
-  {
     path: "/gallery",
-    name: "My Gallery",
-    component: MyGallery,
+    name: "Gallery",
+    component: Gallery,
+  },
+  {
+    path: "/drop",
+    name: "Drop",
+    component: Drop,
+  },
+  {
+    path: "/deck",
+    name: "Deck",
+    component: MyDeck,
   },
 ];
 const router = new VueRouter({

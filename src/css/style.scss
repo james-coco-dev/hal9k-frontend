@@ -146,6 +146,18 @@ button {
     border: 1px solid white;
   }
 }
+
+.button-3 {
+  border-radius: 5px;
+  padding: 0.5em;
+  font-size: 1rem;
+  border: #0084ff 1px solid;
+  background-color: transparent;
+  color: #0084ff;
+  margin: 0.5em;
+  text-decoration: none;
+}
+
 .button-group {
   display: flex;
   flex-direction: row;
@@ -208,4 +220,7 @@ progress[value]::-webkit-progress-value {
 .jazz-icon {
   display: flex;
   align-items: center;
+}
+.mb2 {
+  margin-bottom: 2rem;
 }
