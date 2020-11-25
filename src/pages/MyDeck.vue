@@ -19,7 +19,7 @@
 import { mapState } from "vuex";
 import axios from "axios";
 import PoolItem from "@/components/PoolItem";
-//import { POOLS_KEY } from "@/utils/config";
+import { Artifact, API_URL, NFTConfig } from "../utils/config";
 export default {
   data: () => ({
     myDeck: [
@@ -40,13 +40,30 @@ export default {
   computed: {
     ...mapState({
       stage: (state) => state.account.stage,
+      address: (state) => state.account.address,
+      reward: (state) => state.account.reward,
     }),
   },
-  mounted() {},
+  mounted() {
+    console.log(this.reward);
+    if (this.reward > 0 && this.reward < 11) {
+      this.getCardInfo(this.reward);
+    }
+  },
   methods: {
     upgrade(item) {
       console.log("upgrade", item);
     },
+    async getCardInfo(reward) {
+      const response = await axios.get("http://api.hal9k.ai/hals/" + reward);
+      this.myDeck = [{
+        id: reward,
+        image: response.data.image,
+        name: response.data.name,
+        description: response.data.description,
+        max_supply: response.data.attributes[2].value
+      }]
+    }
   },
 };
 </script>
