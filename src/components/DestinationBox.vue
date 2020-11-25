@@ -3,6 +3,12 @@
     <p class="blink">Choose a destination...</p>
     <div class="menu-list">
       <router-link class="menu-item" to="/">&#8227; Welcome</router-link>
+      <router-link
+        class="menu-item"
+        to="/zap"
+        :class="{ active: $route.name === 'zapper' }"
+        >&#8227; Zapper</router-link
+      >
       <router-link class="menu-item" to="/farm">&#8227; Farming</router-link>
       <router-link
         class="menu-item"

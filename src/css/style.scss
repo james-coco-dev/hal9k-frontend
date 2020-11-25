@@ -6,6 +6,9 @@ body {
   font-size: 0.8em;
   color: white;
 }
+input {
+  font-family: inherit;
+}
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
