@@ -134,7 +134,16 @@ export default {
     },
     /****************************************/
     async claim() {
-      //TODO: Implement claim function
+      try {
+        const { transactionHash } = await this.hal9kVault.methods
+          .withdraw(0, 0)
+          .send({ from: this.address });
+        const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
+        if (tx) await this.checkVaultInfo();
+      } catch (error) {
+        this.$snotify.error(error.message);
+        console.error(error);
+      }
     },
     async withdraw() {
       try {
@@ -210,6 +219,10 @@ export default {
           .call();
         this.yourStaked = this.web3.utils.fromWei(amount);
         this.rewardDebt = this.web3.utils.fromWei(rewardDebt);
+        const pendingHal9k = await this.hal9kVault.methods
+          .pendingHal9k(0, this.address)
+          .call();
+        this.claimableHal9k = this.web3.utils.fromWei(pendingHal9k);
       } catch (error) {
         this.$snotify.error(error.message);
         console.error(error);
