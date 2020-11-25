@@ -71,58 +71,56 @@ export default {
         const passedDays = (now - this.lastUpdateTime) / 60 / 60 / 24;
         let dropNum = Math.floor(Math.random() * 10001);
         
-        if (this.stage == 0 && passedDays >= 1) {
+        // If already entered the stage but got no reward as a dropchance, 
+        // set it 11 so that he can get reward in the next stage
+        if (this.stage >= 1 && passedDays < 2 && this.reward == 0) { 
+          this.setUserReward(this.address, 11);
+        }
+
+        // Entered a new stage and get reward by dropchance
+        if (this.stage == 0 && passedDays >= 1 && this.reward == 11) {
           // Stage 1
           if (dropNum < NFTConfig.dropChanceByStage.stage1Total) {
             this.$snotify.info(
               "Congratulations! You received NFT rewards for stage 1!"
             );
             let reward = this.getRewardByStage(dropNum, 1);
-            this.$store.commit(
-              "reward/setReward",
-              reward
-            );
             this.setUserReward(this.address, reward);
           } else {
             this.$snotify.info(
               "You've successfully entered to Stage 1, but you're unlucky to nail the NFT reward."
             );
+            this.setUserReward(this.address, 0);
           }
-        } else if (this.stage == 1 && passedDays >= 2) {
+        } else if (this.stage == 1 && passedDays >= 2 && this.reward == 11) {
           // Stage 2
           if (dropNum < NFTConfig.dropChanceByStage.stage2Total) {
             this.$snotify.info(
               "Congratulations! You received NFT rewards for stage 2!"
             );
-             let reward = this.getRewardByStage(dropNum, 2);
-            this.$store.commit(
-              "reward/setReward",
-              reward
-            );
+            let reward = this.getRewardByStage(dropNum, 2);
             this.setUserReward(this.address, reward);
           } else {
             this.$snotify.info(
               "You've successfully entered to Stage 2, but you're unlucky to nail the NFT reward."
             );
+            this.setUserReward(this.address, 0);
           }
-        } else if (this.stage >= 2 && passedDays >= 2) {
+        } else if (this.stage >= 2 && passedDays >= 2 && this.reward == 11) {
           // Stage 3 and above
           if (dropNum < NFTConfig.dropChanceByStage.stage3Total) {
             this.$snotify.info(
               `Congratulations! You received NFT rewards for stage ${this
                 .stage + 1}!`
             );
-             let reward = this.getRewardByStage(dropNum, this.state + 1);
-            this.$store.commit(
-              "reward/setReward",
-              reward
-            );
+            let reward = this.getRewardByStage(dropNum, this.state + 1);
             this.setUserReward(this.address, reward);
           } else {
             this.$snotify.info(
               `You've successfully entered to Stage ${this.stage +
                 1}, but you're unlucky to nail the NFT reward.`
             );
+            this.setUserReward(this.address, 0);
           }
         }
       }
@@ -156,13 +154,26 @@ export default {
         this.$snotify.info("Your NFT dropchance has started!");
       }
     },
-  },
-  async setUserReward(address, reward) {
-    
+    async setUserReward(address, reward) {
+      const userData = {
+        address: address,
+        reward: reward,
+        lastUpdateTime: null,
+        stage: null,
+      };
+      const response = await axios.post(API_URL + "/hal9k-user", userData);
+      if (response.reward === reward) {
+        console.log("Update success!");
+        this.$store.commit(
+          "account/setReward",
+          reward
+        );
+      }
+    },
   },
   async mounted() {
     this.getUserInformation(
-      "0x6618876726c060b2gdgd3fcdwe3a7567c0b9f31f13b78d07"
+      "0x5518876726C060b2D3fCda75c0B9f31F13b78D07"
     );
   },
 };

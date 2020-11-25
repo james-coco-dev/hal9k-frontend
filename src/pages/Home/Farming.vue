@@ -163,7 +163,7 @@ export default {
               this.address,
               this.stakeAmount,
               returnValue.events.startedHal9kStaking.returnValues.startedTime,
-              0
+              11
             );
             this.$snotify.success("Staking started...");
           }

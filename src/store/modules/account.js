@@ -4,7 +4,9 @@ export default {
   state: {
     address: null,
     chainId: null,
-    reward: null,
+    reward: null, // 1 ~ 10 : NFT Card Type, 
+                  // 0: Entered new stage, but didn't get reward, 
+                  // 11: Nailed the reward nft card or moved to the next stage
     lastUpdateTime: null,
 		nftBalance: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     stage: null,
