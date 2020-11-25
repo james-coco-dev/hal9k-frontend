@@ -50,6 +50,8 @@ export default {
       stage: (state) => state.account.stage,
       address: (state) => state.account.address,
       reward: (state) => state.account.reward,
+      hal9k: (state) => state.contract.hal9k,
+      hal9kNftPool: (state) => state.contract.hal9kNftPool
     }),
   },
   mounted() {
@@ -58,8 +60,16 @@ export default {
     }
   },
   methods: {
-    upgrade() {},
-    claim() {},
+    upgrade() {
+
+    },
+    async claim() {
+      const returnValue = await this.hal9kNftPool.methods.mintCardForUser(0, this.reward, 1).call();
+      console.log(returnValue);
+      if (returnValue && returnValue.events.minted.cardId) {
+        this.$snotify.success("Successfully minted for you!");
+      }
+    },
     async getCardInfo(reward) {
       const response = await axios.get("https://api.hal9k.ai/hals/" + reward);
       this.droppedNft = [{
