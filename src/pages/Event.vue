@@ -122,6 +122,9 @@ export default {
     }),
   },
   watch: {
+    async address() {
+      if (this.provider) await this.loadContract();
+    },
     async provider() {
       if (this.provider) await this.loadContract();
     },

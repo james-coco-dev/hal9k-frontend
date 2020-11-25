@@ -66,6 +66,9 @@ export default {
     async provider() {
       if (this.provider) await this.loadContract();
     },
+    async address() {
+      if (this.provider) await this.loadContract();
+    },
   },
   methods: {
     /****************** SMART CONTRACT METHODS **********************/

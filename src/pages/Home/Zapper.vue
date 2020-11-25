@@ -48,6 +48,9 @@ export default {
     async provider() {
       if (this.provider) await this.loadContract();
     },
+    async address() {
+      if (this.provider) await this.loadContract();
+    },
     async ethAmount() {
       if (!this.provider) return;
       try {
