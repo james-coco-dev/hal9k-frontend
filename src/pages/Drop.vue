@@ -61,7 +61,7 @@ export default {
     upgrade() {},
     claim() {},
     async getCardInfo(reward) {
-      const response = await axios.get("http://api.hal9k.ai/hals/" + reward);
+      const response = await axios.get("https://api.hal9k.ai/hals/" + reward);
       this.droppedNft = [{
         id: reward,
         image: response.data.image,
@@ -71,8 +71,6 @@ export default {
       }]
     }
   },
-
-  mounted() {},
 };
 </script>
 
