@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Welcome from "@/pages/Home/Welcome";
 import Farming from "@/pages/Home/Farming";
 import Tokenomics from "@/pages/Home/Tokenomics";
+import Zapper from "@/pages/Home/Zapper";
 import Event from "@/pages/Event";
 import Gallery from "@/pages/Gallery";
 import MyDeck from "@/pages/MyDeck";
@@ -20,6 +21,11 @@ const routes = [
     path: "/farm",
     name: "Farming",
     component: Farming,
+  },
+  {
+    path: "/zap",
+    name: "zapper",
+    component: Zapper,
   },
   {
     path: "/tokenomics",

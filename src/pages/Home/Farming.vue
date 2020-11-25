@@ -18,9 +18,6 @@
           <span class="yellow">{{ yourStaked }}</span> Tokens Staked (yours)
         </div>
         <div>
-          <span class="yellow">{{ rewardDebt }}</span> Reward Debt (yours)
-        </div>
-        <div>
           <span class="yellow">{{ claimableHal9k }}</span> Claimable HAL9K
         </div>
       </div>
@@ -53,7 +50,6 @@ export default {
     yourStaked: 0,
     claimableHal9k: 0,
     isApproved: false,
-    rewardDebt: 0,
   }),
   computed: {
     ...mapState({
@@ -214,11 +210,10 @@ export default {
           .balanceOf(Artifact.rinkeby.hal9kVault)
           .call();
         this.totalStaked = this.web3.utils.fromWei(res);
-        const { amount, rewardDebt } = await this.hal9kVault.methods
+        const { amount } = await this.hal9kVault.methods
           .userInfo(0, this.address)
           .call();
         this.yourStaked = this.web3.utils.fromWei(amount);
-        this.rewardDebt = this.web3.utils.fromWei(rewardDebt);
         const pendingHal9k = await this.hal9kVault.methods
           .pendingHal9k(0, this.address)
           .call();
@@ -243,6 +238,7 @@ export default {
 .stake-input {
   margin-bottom: 1rem;
   color: white;
+  padding: 3px;
   border: 1px solid white;
   background: transparent;
   outline: none;

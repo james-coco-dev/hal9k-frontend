@@ -7,7 +7,7 @@
       HAL9K Tokenomics
     </p>
     <div class="info-box">
-      <div>90000 Total Supply</div>
+      <div>9000 Total Supply</div>
     </div>
     <button>Read full article</button>
   </main-wrapper>
