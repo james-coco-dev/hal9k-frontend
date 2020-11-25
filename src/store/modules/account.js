@@ -4,8 +4,9 @@ export default {
   state: {
     address: null,
     chainId: null,
-    balance: null,
+    reward: null,
     lastUpdateTime: null,
+		nftBalance: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     stage: null,
   },
 
@@ -17,25 +18,41 @@ export default {
       state.chainId = payload;
     },
     setAccount(state, payload) {
-      const { balance, lastUpdateTime, stage } = payload;
-      state.balance = balance;
+      const { reward, lastUpdateTime, stage } = payload;
+      state.reward = reward;
       state.lastUpdateTime = lastUpdateTime;
       state.stage = stage;
     },
+		updateBalance(state, payload) {
+			const { type, amount } = payload;
+			state.nftBalance[type - 1] = amount;
+		},
+		clearBalance(state, payload) {
+			state.nftBalance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		},
+		setReward(state, payload) {
+			state.reward = payload;
+		}
   },
   actions: {
     clearAccount({ commit, state }) {
       commit("setAccount", {
-        balance: null,
+        reward: null,
         lastUpdateTime: null,
         stage: null,
       });
     },
+		clearBalance({ commit, state }) {
+			commit("clearBalance");
+		},
+		dumpReward({ commit, state }) {
+			commit("setReward", 0);
+		},
     disconnect({ commit, state }) {
       commit("setAddress", null);
       commit("setChainId", null);
       commit("setAccount", {
-        balance: null,
+        reward: null,
         lastUpdateTime: null,
         stage: null,
       });

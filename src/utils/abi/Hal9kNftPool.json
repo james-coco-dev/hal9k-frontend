@@ -74,6 +74,25 @@
             {
                 "indexed": false,
                 "internalType": "uint256",
+                "name": "startedTime",
+                "type": "uint256"
+            }
+        ],
+        "name": "didHal9kStaking",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "addr",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
                 "name": "cardId",
                 "type": "uint256"
             },
@@ -137,25 +156,6 @@
             {
                 "indexed": false,
                 "internalType": "address",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "startedTime",
-                "type": "uint256"
-            }
-        ],
-        "name": "startedHal9kStaking",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "address",
                 "name": "newAddress",
                 "type": "address"
             },
@@ -208,6 +208,24 @@
             }
         ],
         "name": "changeHal9kVaultAddress",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "stakeAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "doHal9kStaking",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -303,6 +321,25 @@
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+            }
+        ],
+        "name": "isHal9kStakingStarted",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "started",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256",
                 "name": "_pid",
                 "type": "uint256"
@@ -365,19 +402,6 @@
     {
         "inputs": [],
         "name": "renounceOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "stakeAmount",
-                "type": "uint256"
-            }
-        ],
-        "name": "startHal9kStaking",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

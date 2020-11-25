@@ -58,6 +58,7 @@ export default {
   computed: {
     ...mapState({
       address: (state) => state.account.address,
+      lastUpdateTime: (state) => state.account.lastUpdateTime,
       hal9kVault: (state) => state.contract.hal9kVault,
       hal9kWethPair: (state) => state.contract.hal9kWethPair,
       hal9kNftPool: (state) => state.contract.hal9kNftPool,
@@ -109,10 +110,10 @@ export default {
       }
     },
     /****************** BACKEND CALL METHODS **********************/
-    async createUser(address, balance, startTime, stage) {
+    async createUser(address, reward, startTime, stage) {
       const userData = {
         address: address,
-        balance: balance,
+        reward: reward,
         lastUpdateTime: startTime,
         stage: stage,
       };
@@ -121,12 +122,12 @@ export default {
         this.$snotify.info("Your NFT dropchance has started!");
       }
     },
-    async updateUser(address, stage, lastUpdateTime, balance) {
+    async updateUser(address, stage, lastUpdateTime, reward) {
       const userData = {
         address: address,
         stage: stage,
         lastUpdateTime: lastUpdateTime,
-        balance: balance,
+        reward: reward,
       };
       const response = await axios.post(API_URL + "/hal9k-user", userData);
       console.log("Successfully updated the user :", response);
@@ -156,24 +157,15 @@ export default {
         if (tx) {
           await this.checkVaultInfo();
           this.$snotify.success("Deposit succeed...");
-          //Start getting the NFT as reward
-          //TODO: Should update the smart contract
-          const returnValue = await this.hal9kNftPool.methods
-            .startHal9kStaking(this.web3.utils.toWei(this.stakeAmount))
-            .send({ from: this.address });
-          console.log(returnValue);
-          if (
-            returnValue &&
-            returnValue.events.startedHal9kStaking.returnValues.startedTime
-          ) {
-            this.$snotify.success("Staking started...");
-            //Tested Function
+
+          if (!this.lastUpdateTime) {
             this.createUser(
               this.address,
               this.stakeAmount,
               returnValue.events.startedHal9kStaking.returnValues.startedTime,
               0
             );
+            this.$snotify.success("Staking started...");
           }
         }
       } catch (error) {

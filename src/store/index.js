@@ -6,7 +6,6 @@ import account from "./modules/account";
 import event from "./modules/event";
 import contract from "./modules/contract";
 import metamask from "./modules/metamask";
-import reward from './modules/reward';
 
 Vue.use(Vuex);
 
@@ -20,8 +19,7 @@ export default new Vuex.Store({
     account,
     event,
     metamask,
-    contract,
-    reward
+    contract
   },
 
   state: {

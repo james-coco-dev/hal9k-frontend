@@ -50,14 +50,14 @@ export default {
       let sum = 0;
 
       if (stage === 1) {
-        dropchance = NFTConfig.stage1;
+        dropchance = NFTConfig.dropChanceByStage.stage1;
       } else if (stage === 2) {
-        dropchance = NFTConfig.stage2;
+        dropchance = NFTConfig.dropChanceByStage.stage2;
       } else if (stage >= 3) {
-        dropchance = NFTConfig.stage3;
+        dropchance = NFTConfig.dropChanceByStage.stage3;
       }
 
-      for (let i = 0; i < dropchance.length(); i++) {
+      for (let i = 0; i < dropchance.length; i++) {
         sum += dropchance[i];
         if (dropNumber <= sum) {
           return this.getCardType(i + 1);
@@ -69,18 +69,20 @@ export default {
       if (this.lastUpdateTime) {
         const now = Date.now() / 1000;
         const passedDays = (now - this.lastUpdateTime) / 60 / 60 / 24;
-        const dropNum = Math.floor(Math.random() * 10001);
-
+        let dropNum = Math.floor(Math.random() * 10001);
+        
         if (this.stage == 0 && passedDays >= 1) {
           // Stage 1
-          if (dropNum < NFTConfig.stage1Total) {
+          if (dropNum < NFTConfig.dropChanceByStage.stage1Total) {
             this.$snotify.info(
               "Congratulations! You received NFT rewards for stage 1!"
             );
+            let reward = this.getRewardByStage(dropNum, 1);
             this.$store.commit(
-              "reward/setRewardNft",
-              this.getRewardByStage(dropNum, 1)
+              "reward/setReward",
+              reward
             );
+            this.setUserReward(this.address, reward);
           } else {
             this.$snotify.info(
               "You've successfully entered to Stage 1, but you're unlucky to nail the NFT reward."
@@ -88,14 +90,16 @@ export default {
           }
         } else if (this.stage == 1 && passedDays >= 2) {
           // Stage 2
-          if (dropNum < NFTConfig.stage2Total) {
+          if (dropNum < NFTConfig.dropChanceByStage.stage2Total) {
             this.$snotify.info(
               "Congratulations! You received NFT rewards for stage 2!"
             );
+             let reward = this.getRewardByStage(dropNum, 2);
             this.$store.commit(
-              "reward/setRewardNft",
-              this.getRewardByStage(dropNum, 2)
+              "reward/setReward",
+              reward
             );
+            this.setUserReward(this.address, reward);
           } else {
             this.$snotify.info(
               "You've successfully entered to Stage 2, but you're unlucky to nail the NFT reward."
@@ -103,15 +107,17 @@ export default {
           }
         } else if (this.stage >= 2 && passedDays >= 2) {
           // Stage 3 and above
-          if (dropNum < NFTConfig.stage3Total) {
+          if (dropNum < NFTConfig.dropChanceByStage.stage3Total) {
             this.$snotify.info(
               `Congratulations! You received NFT rewards for stage ${this
                 .stage + 1}!`
             );
+             let reward = this.getRewardByStage(dropNum, this.state + 1);
             this.$store.commit(
-              "reward/setRewardNft",
-              this.getRewardByStage(dropNum, this.stage + 1)
+              "reward/setReward",
+              reward
             );
+            this.setUserReward(this.address, reward);
           } else {
             this.$snotify.info(
               `You've successfully entered to Stage ${this.stage +
@@ -120,16 +126,16 @@ export default {
           }
         }
       }
-      setTimeout(this.startTimer, 1000);
+      setTimeout(this.startTimer, 1000 * 60 * 5);
     },
     async getUserInformation(address) {
       const userData = { address: address };
       const response = await axios.get(API_URL + "/hal9k-user", {
         params: { address: address },
       });
-      if (response.data.balance) {
+      if (response.data.lastupdatetime) {
         this.$store.commit("account/setAccount", {
-          balance: response.data.balance,
+          reward: response.data.reward,
           stage: response.data.stage,
           lastUpdateTime: response.data.lastupdatetime,
         });
@@ -138,10 +144,10 @@ export default {
         this.$store.dispatch("account/clearAccount");
       }
     },
-    async createUser(address, balance, startTime, stage) {
+    async createUser(address, reward, startTime, stage) {
       const userData = {
         address: address,
-        balance: balance,
+        reward: reward,
         lastUpdateTime: startTime,
         stage: stage,
       };
@@ -150,6 +156,9 @@ export default {
         this.$snotify.info("Your NFT dropchance has started!");
       }
     },
+  },
+  async setUserReward(address, reward) {
+    
   },
   async mounted() {
     this.getUserInformation(
