@@ -10,7 +10,7 @@
       <section class="d1 screen">
         <p class="label">NFT</p>
         <div class="nft-box">
-          <pool-item :pools="pools" :hasButton="false" />
+          <pool-item :pools="droppedNft" :hasButton="false" />
         </div>
       </section>
       <section class="e2 screen">
@@ -38,30 +38,38 @@
 <script>
 import { mapState } from "vuex";
 import PoolItem from "../components/PoolItem.vue";
-//import axios from "axios";
+import axios from "axios";
+import { Artifact, API_URL, NFTConfig } from "../utils/config";
 export default {
   data: () => ({
-    pools: [
-      {
-        //this is an example, should be retrieve from the backend or contract
-        id: 1,
-        image: "https://images.hal9k.ai/Chair_1x1.jpg",
-        name: "Chair",
-        description: "Common chair",
-        max_supply: 2500,
-      },
-    ],
+    droppedNft: [{}],
   }),
   components: { PoolItem },
-
   computed: {
     ...mapState({
       stage: (state) => state.account.stage,
+      address: (state) => state.account.address,
+      reward: (state) => state.account.reward,
     }),
+  },
+  mounted() {
+    if (this.reward > 0 && this.reward < 11) {
+      this.getCardInfo(this.reward);
+    }
   },
   methods: {
     upgrade() {},
     claim() {},
+    async getCardInfo(reward) {
+      const response = await axios.get("http://api.hal9k.ai/hals/" + reward);
+      this.droppedNft = [{
+        id: reward,
+        image: response.data.image,
+        name: response.data.name,
+        description: response.data.description,
+        max_supply: response.data.attributes[2].value
+      }]
+    }
   },
 
   mounted() {},

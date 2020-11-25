@@ -22,17 +22,7 @@ import PoolItem from "@/components/PoolItem";
 import { Artifact, API_URL, NFTConfig } from "../utils/config";
 export default {
   data: () => ({
-    myDeck: [
-      {
-        //this is an example, should be retrieve from the backend or contract
-        id: 1,
-        image: "https://images.hal9k.ai/Chair_1x1.jpg",
-        name: "Chair",
-        description: "Common chair",
-        max_supply: 2500,
-        owns: 100,
-      },
-    ],
+    myDeck: [],
   }),
   components: {
     PoolItem,
@@ -45,7 +35,6 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.reward);
     if (this.reward > 0 && this.reward < 11) {
       this.getCardInfo(this.reward);
     }
