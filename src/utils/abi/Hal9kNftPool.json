@@ -261,6 +261,11 @@
                 "internalType": "uint256",
                 "name": "stakeAmount",
                 "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "currentTime",
+                "type": "uint256"
             }
         ],
         "name": "doHal9kStaking",
@@ -301,6 +306,25 @@
             {
                 "internalType": "uint256",
                 "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "getStakeStartTime",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "startTime",
                 "type": "uint256"
             }
         ],
@@ -379,7 +403,7 @@
         "inputs": [
             {
                 "internalType": "address",
-                "name": "sender",
+                "name": "user",
                 "type": "address"
             }
         ],

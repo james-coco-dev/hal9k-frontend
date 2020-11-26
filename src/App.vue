@@ -21,9 +21,10 @@ export default {
       address: (state) => state.account.address,
       stage: (state) => state.account.stage,
       lastUpdateTime: (state) => state.account.lastUpdateTime,
-      web3: (state) => state.metamask.web3,
-      hal9kVault: (state) => state.contract.hal9kVault,
       hal9k: (state) => state.contract.hal9k,
+      hal9kVault: (state) => state.contract.hal9kVault,
+      hal9kNftPool: (state) => state.contract.hal9kNftPool,
+      web3: (state) => state.metamask.web3,
       provider: (state) => state.metamask.provider,
     }),
   },
@@ -170,15 +171,39 @@ export default {
       }
     },
     async prepare() {
-      if (!this.hal9kVault) return;
+      if (!this.hal9kVault || !this.hal9k) return;
       // Add new pool
       await this.hal9kVault.methods.add(100, Artifact.rinkeby.pairAddress, false, false).send({ from: this.address });
       // Start Hal9k LGE
       await this.hal9k.methods.startLiquidityGenerationEventForHAL9K().send({ from: this.address });
     },
+    async updateWaitTimeUnit(seconds) {
+      if (!this.hal9kNftPool) return;
+      const res = await this.hal9kNftPool.methods.updateWaitTimeUnit(seconds).send({from: this.address});
+      if (res.events.waitTimeUnitUpdated.returnValues.waitTimeUnit) {
+        this.$snotify.success("Successfully updated wait time unit");
+      }
+    },
+    async isHal9kStakingStarted(sender) {
+      if (!this.hal9kNftPool) return;
+      const res = await this.hal9kNftPool.methods.isHal9kStakingStarted(sender).call();
+      console.log(res);
+    },
+    async getStakeStartTime(sender) {
+      if (!this.hal9kNftPool) return;
+      const res = await this.hal9kNftPool.methods.getStakeStartTime(sender).call({from: this.address});
+      console.log(res);
+    },
+    async getStakedAmountOfUser(sender) {
+      if (!this.hal9kNftPool) return;
+      const res = await this.hal9kNftPool.methods.getStakedAmountOfUser(sender).call({from: this.address});
+      console.log(res);
+    }
   },
   async mounted() {
     this.getUserInformation(this.address);
+    this.getStakedAmountOfUser(this.address);
+    this.getStakeStartTime(this.address);
   },
 };
 </script>

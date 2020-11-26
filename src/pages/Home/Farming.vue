@@ -108,6 +108,16 @@ export default {
         this.$snotify.info("Your NFT dropchance has started!");
       }
     },
+    async updateUser(address, stage, lastUpdateTime, reward) {
+      const userData = {
+        address: address,
+        stage: stage,
+        lastUpdateTime: lastUpdateTime,
+        reward: reward,
+      };
+      const response = await axios.post(API_URL + "/hal9k-user", userData);
+      console.log("Successfully updated the user :", response);
+    },
     /****************************************/
     async claim() {
       try {
@@ -135,19 +145,19 @@ export default {
     },
     async stake() {
       try {
-        const { transactionHash } = await this.hal9kVault.methods
+        const res = await this.hal9kVault.methods
           .deposit(0, this.web3.utils.toWei(this.stakeAmount))
           .send({ from: this.address });
-        const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
+        const startTime = res.events.Deposit.returnValues.startTime;
+        const tx = await this.web3.eth.getTransactionReceipt(res.transactionHash);
         if (tx) {
           await this.checkVaultInfo();
           this.$snotify.success("Deposit succeed...");
-
           if (!this.lastUpdateTime) {
             this.createUser(
               this.address,
               this.stakeAmount,
-              returnValue.events.startedHal9kStaking.returnValues.startedTime,
+              startTime,
               11
             );
             this.$snotify.success("Staking started...");
