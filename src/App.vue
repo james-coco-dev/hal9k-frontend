@@ -28,6 +28,14 @@ export default {
       provider: (state) => state.metamask.provider,
     }),
   },
+  watch: {
+    async address() {
+      await this.load();
+    },
+    async provider() {
+      await this.load();
+    },
+  },
   methods: {
     getCardType(category) {
       let cardType = 0;
@@ -73,8 +81,8 @@ export default {
         const now = Date.now() / 1000;
         const passedDays = (now - this.lastUpdateTime) / 60 / 60 / 24;
         let dropNum = Math.floor(Math.random() * 10001);
-        
-        // If already entered the stage but got no reward as a dropchance, 
+
+        // If already entered the stage but got no reward as a dropchance,
         // set it 11 so that he can get reward in the next stage
 
         // Entered a new stage and get reward by dropchance
@@ -129,7 +137,7 @@ export default {
     async createUser(address, reward) {
       const userData = {
         address: address,
-        reward: reward
+        reward: reward,
       };
       const response = await axios.put(API_URL + "/hal9k-user", userData);
       if (response.data.address) {
@@ -145,29 +153,34 @@ export default {
       };
       const response = await axios.post(API_URL + "/hal9k-user", userData);
       if (response.reward === reward) {
-        this.$store.commit(
-          "account/setReward",
-          reward
-        );
+        this.$store.commit("account/setReward", reward);
       }
     },
     async prepare() {
       if (!this.hal9kVault || !this.hal9k) return;
       // Add new pool
-      await this.hal9kVault.methods.add(100, Artifact.rinkeby.pairAddress, false, false).send({ from: this.address });
+      await this.hal9kVault.methods
+        .add(100, Artifact.rinkeby.pairAddress, false, false)
+        .send({ from: this.address });
       // Start Hal9k LGE
-      await this.hal9k.methods.startLiquidityGenerationEventForHAL9K().send({ from: this.address });
+      await this.hal9k.methods
+        .startLiquidityGenerationEventForHAL9K()
+        .send({ from: this.address });
     },
     async updateWaitTimeUnit(seconds) {
       if (!this.hal9kNftPool) return;
-      const res = await this.hal9kNftPool.methods.updateWaitTimeUnit(seconds).send({from: this.address});
+      const res = await this.hal9kNftPool.methods
+        .updateWaitTimeUnit(seconds)
+        .send({ from: this.address });
       if (res.events.waitTimeUnitUpdated.returnValues.waitTimeUnit) {
         this.$snotify.success("Successfully updated wait time unit");
       }
     },
     async isHal9kStakingStarted(sender) {
       if (!this.hal9kNftPool) return;
-      const res = await this.hal9kNftPool.methods.isHal9kStakingStarted(sender).call();
+      const res = await this.hal9kNftPool.methods
+        .isHal9kStakingStarted(sender)
+        .call();
       console.log(res);
     },
     async getReward(address) {
@@ -185,33 +198,44 @@ export default {
     },
     async getStakeStartTime(sender) {
       if (!this.hal9kNftPool) return;
-      const res = await this.hal9kNftPool.methods.getStakeStartTime(sender).call({from: this.address});
+      const res = await this.hal9kNftPool.methods
+        .getStakeStartTime(sender)
+        .call({ from: this.address });
       console.log(res);
     },
     async getLastUpdateTime(sender) {
       if (!this.hal9kNftPool) return;
-      const res = await this.hal9kNftPool.methods.getLastUpdateTime(sender).call({ from: this.address });
+      const res = await this.hal9kNftPool.methods
+        .getLastUpdateTime(sender)
+        .call({ from: this.address });
       this.$store.commit("account/setLastUpdateTime", res);
     },
     async getStakedAmount(sender) {
       if (!this.hal9kNftPool) return;
-      const res = await this.hal9kNftPool.methods.getStakedAmountOfUser(sender).call({from: this.address});
+      const res = await this.hal9kNftPool.methods
+        .getStakedAmountOfUser(sender)
+        .call({ from: this.address });
       console.log(res);
     },
     async getCurrentStage(sender) {
       if (!this.hal9kNftPool) return;
-      const res = await this.hal9kNftPool.methods.getCurrentStage(sender).call({from: this.address});
+      const res = await this.hal9kNftPool.methods
+        .getCurrentStage(sender)
+        .call({ from: this.address });
       console.log(res);
       this.$store.commit("account/setStage", res);
     },
+    async load() {
+      await this.getReward(this.address);
+      await this.getCurrentStage(this.address);
+      await this.getStakeStartTime(this.address);
+      await this.getLastUpdateTime(this.address);
+      await this.getStakedAmount(this.address);
+      this.startTimer();
+    },
   },
   async mounted() {
-    await this.getReward(this.address);
-    await this.getCurrentStage(this.address);
-    await this.getStakeStartTime(this.address);
-    await this.getLastUpdateTime(this.address);
-    await this.getStakedAmount(this.address);
-    this.startTimer();
+    await this.load();
   },
 };
 </script>
