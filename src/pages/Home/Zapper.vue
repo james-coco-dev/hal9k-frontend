@@ -21,6 +21,10 @@
           <span class="yellow">{{ estimateLpAmount }}</span> HAL9K/ETH LP
         </div>
       </div>
+      <div class="stake-checkbox">
+        <input type="checkbox" v-model="autoStake" id="auto-stake" />
+        <label for="auto-stake">Stake automatically</label>
+      </div>
       <div class="button-group">
         <button @click="swap">SWAP</button>
       </div>
@@ -35,6 +39,7 @@ export default {
   data: () => ({
     ethAmount: 0,
     estimateLpAmount: 0,
+    autoStake: false,
   }),
   computed: {
     ...mapState({
@@ -54,9 +59,14 @@ export default {
     async ethAmount() {
       if (!this.provider) return;
       try {
-        this.estimateLpAmount = await this.hal9kv1Router.methods
-          .getLPTokenPerEthUnit(this.web3.utils.toWei(this.ethAmount))
-          .call();
+        if (this.ethAmount <= 0) return;
+        this.estimateLpAmount = new BigNumber(
+          this.web3.utils.fromWei(
+            await this.hal9kv1Router.methods
+              .getLPTokenPerEthUnit(this.web3.utils.toWei(this.ethAmount))
+              .call()
+          )
+        ).toFixed(2, 1);
       } catch (err) {
         this.$snotify.error(err.message);
         this.estimateLpAmount = 0;
@@ -66,6 +76,7 @@ export default {
   methods: {
     async swap() {
       try {
+        console.log(this.autoStake);
         const {
           transactionHash,
         } = await this.hal9kv1Router.methods
@@ -121,5 +132,10 @@ export default {
   font-size: 1.4rem;
   padding: 5px;
   letter-spacing: 3px;
+}
+.stake-checkbox {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
 }
 </style>
