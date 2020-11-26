@@ -24,6 +24,7 @@
           <div class="button-group">
             <button class="button-4" @click="upgrade">Upgrade</button>
             <button class="button-4" @click="claim">Claim</button>
+            <button class="button-4" @click="moveToNextStage">Next Stage</button>
           </div>
         </div>
       </section>
@@ -60,14 +61,28 @@ export default {
     }
   },
   methods: {
-    upgrade() {
-
+    async updateUser(address, stage, lastUpdateTime, reward) {
+      const userData = {
+        address: address,
+        stage: stage,
+        lastUpdateTime: lastUpdateTime,
+        reward: reward,
+      };
+      const response = await axios.post(API_URL + "/hal9k-user", userData);
+      console.log("Successfully updated the user :", response);
     },
-    async claim() {
-      const returnValue = await this.hal9kNftPool.methods.mintCardForUser(0, this.reward, 1).call();
-      console.log(returnValue);
-      if (returnValue && returnValue.events.minted.cardId) {
-        this.$snotify.success("Successfully minted for you!");
+    async moveStage(backOrForth) {
+      // Back if true, Forth if false
+      const returnValue = await this.hal9kNftPool.methods
+        .moveStageBackOrForth(backOrForth)
+        .send({ from: this.address });
+      if (returnValue && returnValue.events.stageUpdated.returnValues.stage) {
+        this.$snotify.success(`Stage updated to ${returnValue.events.stageUpdated.returnValues.stage}`);
+        this.updateUser(
+          this.address,
+          returnValue.events.stageUpdated.returnValues.stage,
+          returnValue.events.stageUpdated.returnValues.lastUpdateTime
+        );
       }
     },
     async getCardInfo(reward) {
@@ -79,7 +94,40 @@ export default {
         description: response.data.description,
         max_supply: response.data.attributes[2].value
       }]
-    }
+    },
+    async setUserReward(address, reward) {
+      const userData = {
+        address: address,
+        reward: reward,
+        lastUpdateTime: null,
+        stage: null,
+      };
+      const response = await axios.post(API_URL + "/hal9k-user", userData);
+      if (response.reward === reward) {
+        console.log("Update success!");
+        this.$store.commit(
+          "account/setReward",
+          reward
+        );
+      }
+    },
+    upgrade() {
+    },
+    moveToNextStage() {
+      this.moveStage(false);
+      this.setUserReward(this.address, 11);
+    },
+    async claim() {
+      // Mint card for user
+      const returnValue = await this.hal9kNftPool.methods.mintCardForUser(0, this.reward, 1).call();
+      if (!returnValue || !returnValue.events.minted.cardId) {
+        this.$snotify.error("Failed to mint the card!");
+        return;
+      }
+      this.$snotify.success("Successfully minted for you!");
+      this.moveStage(true);      // Move one stage back
+      this.setUserReward(this.address, 11);
+    },
   },
 };
 </script>

@@ -73,9 +73,6 @@ export default {
         
         // If already entered the stage but got no reward as a dropchance, 
         // set it 11 so that he can get reward in the next stage
-        if (this.stage >= 1 && passedDays < 2 && this.reward == 0) { 
-          this.setUserReward(this.address, 11);
-        }
 
         // Entered a new stage and get reward by dropchance
         if (this.stage == 0 && passedDays >= 1 && this.reward == 11) {

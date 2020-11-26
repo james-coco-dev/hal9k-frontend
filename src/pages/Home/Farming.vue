@@ -94,20 +94,7 @@ export default {
       console.log(currentStage);
       return currentStage;
     },
-    async moveStage(backOrForth) {
-      // Back if true, Forth if false
-      const returnValue = await this.hal9kNftPool.methods
-        .moveStageBackOrForth()
-        .send({ from: this.account });
-      if (returnValue && returnValue.events.stageUpdated.returnValues.stage) {
-        this.$snotify.success("Stage updated...");
-        this.updateUser(
-          this.address,
-          returnValue.events.stageUpdated.returnValues.stage,
-          returnValue.events.stageUpdated.returnValues.lastUpdateTime
-        );
-      }
-    },
+    
     /****************** BACKEND CALL METHODS **********************/
     async createUser(address, reward, startTime, stage) {
       const userData = {
@@ -120,16 +107,6 @@ export default {
       if (response.data.address) {
         this.$snotify.info("Your NFT dropchance has started!");
       }
-    },
-    async updateUser(address, stage, lastUpdateTime, reward) {
-      const userData = {
-        address: address,
-        stage: stage,
-        lastUpdateTime: lastUpdateTime,
-        reward: reward,
-      };
-      const response = await axios.post(API_URL + "/hal9k-user", userData);
-      console.log("Successfully updated the user :", response);
     },
     /****************************************/
     async claim() {
