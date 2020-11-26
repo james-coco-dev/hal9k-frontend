@@ -23,7 +23,7 @@
               <span class="yellow">$ {{ marketCap }}</span> Market Cap
             </div>
           </div>
-          <div v-if="address">
+          <div v-if="address && eventStarted">
             <div v-if="liquidityOngoing">
               <div class="deposit-box">
                 <div>Deposit ETH:</div>
@@ -70,14 +70,19 @@
             />
             <progress max="100" :value="value"></progress>
           </div>
-          <div class="left-day" v-if="liquidityOngoing">
-            <p>Liquidity Event Ends in</p>
-            <p>{{ day }} days</p>
-            <p>{{ hour }} hours</p>
-            <p>{{ min }} mins</p>
-            <p>{{ sec }} secs</p>
+          <div v-if="eventStarted">
+            <div class="left-day" v-if="liquidityOngoing">
+              <p>Liquidity Event Ends in</p>
+              <p>{{ day }} days</p>
+              <p>{{ hour }} hours</p>
+              <p>{{ min }} mins</p>
+              <p>{{ sec }} secs</p>
+            </div>
+            <div class="left-day" v-else>Liquidity Event Ended</div>
           </div>
-          <div class="left-day" v-else>Liquidity Event Ended</div>
+          <div v-else class="left-day">
+            <p>Liquidity Event is not started</p>
+          </div>
           <img class="blink" src="@/static/images/event.png" width="70%" />
         </div>
       </section>
@@ -107,6 +112,7 @@ export default {
     sec: 0,
     totalEthContributed: 0,
     liquidityOngoing: false,
+    eventStarted: false,
     halPrice: 0,
     marketCap: 0,
     ethToDeposit: 0,
@@ -202,44 +208,49 @@ export default {
           await this.getTokenInfo();
         }
       } catch (e) {
+        console.log(e);
         this.$snotify.error(e.message);
       }
     },
     async loadContract() {
       if (!this.hal9k) return;
-      this.$store.commit("loading", true);
-      this.liquidityOngoing = await this.hal9k.methods
-        .liquidityGenerationOngoing()
-        .call();
-      if (this.liquidityOngoing) {
-        try {
-          const startTimestamp = await this.hal9k.methods
-            .contractStartTimestamp()
-            .call();
-          if (startTimestamp <= 0) {
-            this.$store.commit("loading", false);
-            return;
-          }
-          this.timestamp = parseInt(startTimestamp);
-        } catch (e) {
-          this.$snotify.error(e.message);
-        }
-        const balance = await this.web3.eth.getBalance(this.address);
-        this.ethToDeposit = new BigNumber(
-          this.web3.utils.fromWei(balance)
-        ).toFixed(2, 1);
-        this.retrieveTimestamp();
-      } else {
-        const LPGenerationCompleted = await this.hal9k.methods
-          .LPGenerationCompleted()
+      try {
+        this.$store.commit("loading", true);
+        const startTimestamp = await this.hal9k.methods
+          .contractStartTimestamp()
           .call();
-        if (!LPGenerationCompleted)
-          await this.hal9k.methods
-            .addLiquidityToUniswapHAL9KxWETHPair()
-            .send({ from: this.address });
+        if (startTimestamp <= 0) {
+          this.$store.commit("loading", false);
+          this.eventStarted = false;
+          return;
+        }
+        this.eventStarted = true;
+        this.timestamp = parseInt(startTimestamp);
+        this.liquidityOngoing = await this.hal9k.methods
+          .liquidityGenerationOngoing()
+          .call();
+        if (!this.liquidityOngoing) {
+          const LPGenerationCompleted = await this.hal9k.methods
+            .LPGenerationCompleted()
+            .call();
+          if (!LPGenerationCompleted)
+            await this.hal9k.methods
+              .addLiquidityToUniswapHAL9KxWETHPair()
+              .send({ from: this.address });
+        } else {
+          const balance = await this.web3.eth.getBalance(this.address);
+          this.ethToDeposit = new BigNumber(
+            this.web3.utils.fromWei(balance)
+          ).toFixed(2, 1);
+          this.retrieveTimestamp();
+        }
+        await this.getTokenInfo();
+        this.$store.commit("loading", false);
+      } catch (e) {
+        console.log(e);
+        this.$store.commit("loading", false);
+        this.$snotify.error(e.message);
       }
-      await this.getTokenInfo();
-      this.$store.commit("loading", false);
     },
   },
 
