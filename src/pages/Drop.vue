@@ -9,8 +9,11 @@
     <div class="row drop-container">
       <section class="d1 screen">
         <p class="label">NFT</p>
-        <div class="nft-box">
+        <div class="nft-box" v-if="droppedNft.length > 0">
           <pool-item :pools="droppedNft" :hasButton="false" />
+        </div>
+        <div class="nft-box" v-else>
+          <div class="no-nft">No NFT Reward</div>
         </div>
       </section>
       <section class="e2 screen">
@@ -20,10 +23,10 @@
             <img src="@/static/images/stagelabel.png" width="30%" />
             <div class="stage-label">{{ stage }}</div>
           </div>
-          <div>Lorem</div>
+          <div>Welcome to NFT dropchance</div>
           <div class="button-group">
-            <button class="button-4" @click="upgrade">Upgrade</button>
-            <button class="button-4" @click="claim">Claim</button>
+            <button class="button-4" v-if="droppedNft.length" @click="upgrade">Upgrade</button>
+            <button class="button-4" v-if="droppedNft.length" @click="claim">Claim</button>
             <button class="button-4" @click="moveToNextStage">Next Stage</button>
           </div>
         </div>
@@ -43,7 +46,7 @@ import axios from "axios";
 import { Artifact, API_URL, NFTConfig } from "../utils/config";
 export default {
   data: () => ({
-    droppedNft: [{}],
+    droppedNft: [],
   }),
   components: { PoolItem },
   computed: {
@@ -147,6 +150,13 @@ export default {
 .nft-box {
   width: 70%;
   margin: auto;
+}
+.no-nft {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: 25px;
 }
 .upgrade-box {
   padding: 1rem;

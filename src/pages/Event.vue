@@ -174,7 +174,6 @@ export default {
       this.day = Math.floor(leftSecs / 60 / 60 / 24);
       setTimeout(() => this.retrieveTimestamp(), 1000);
     },
-
     async getTokenInfo() {
       if (!this.hal9k) return;
       const res = await this.hal9k.methods.totalETHContributed().call();
@@ -189,9 +188,12 @@ export default {
       ).toFixed(5);
     },
     async claimLpToken() {
-      await this.hal9k.methods.claimLPTokens().send({
+      const res = await this.hal9k.methods.claimLPTokens().send({
         from: this.address,
       });
+      if (res.events.LPTokenClaimed.returnValues.value) {
+        this.$snotify.success("Successfully claimed LP");
+      }
     },
     async addLiquidity($event) {
       if (!this.agree || !this.hal9k || !parseFloat(this.ethToDeposit)) return;
