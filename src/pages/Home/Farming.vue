@@ -96,23 +96,19 @@ export default {
     },
     
     /****************** BACKEND CALL METHODS **********************/
-    async createUser(address, reward, startTime, stage) {
+    async createUser(address, reward) {
       const userData = {
         address: address,
-        reward: reward,
-        lastUpdateTime: startTime,
-        stage: stage,
+        reward: reward
       };
       const response = await axios.put(API_URL + "/hal9k-user", userData);
       if (response.data.address) {
         this.$snotify.info("Your NFT dropchance has started!");
       }
     },
-    async updateUser(address, stage, lastUpdateTime, reward) {
+    async updateUser(address, reward) {
       const userData = {
         address: address,
-        stage: stage,
-        lastUpdateTime: lastUpdateTime,
         reward: reward,
       };
       const response = await axios.post(API_URL + "/hal9k-user", userData);
@@ -156,8 +152,6 @@ export default {
           if (!this.lastUpdateTime) {
             this.createUser(
               this.address,
-              this.stakeAmount,
-              startTime,
               11
             );
             this.$snotify.success("Staking started...");

@@ -137,25 +137,6 @@
             {
                 "indexed": false,
                 "internalType": "address",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "newAmount",
-                "type": "uint256"
-            }
-        ],
-        "name": "stakeAmountUpdated",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "address",
                 "name": "newAddress",
                 "type": "address"
             },
@@ -274,7 +255,13 @@
         "type": "function"
     },
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
         "name": "getCurrentStage",
         "outputs": [
             {
@@ -306,6 +293,25 @@
             {
                 "internalType": "uint256",
                 "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "getLastUpdateTime",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "startTime",
                 "type": "uint256"
             }
         ],
@@ -496,19 +502,6 @@
             }
         ],
         "name": "transferOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "newAmount",
-                "type": "uint256"
-            }
-        ],
-        "name": "updateStakeAmount",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

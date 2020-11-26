@@ -19,22 +19,28 @@ export default {
     setChainId(state, payload) {
       state.chainId = payload;
     },
-    setAccount(state, payload) {
-      const { reward, lastUpdateTime, stage } = payload;
-      state.reward = reward;
-      state.lastUpdateTime = lastUpdateTime;
-      state.stage = stage;
-    },
 		updateBalance(state, payload) {
 			const { type, amount } = payload;
 			state.nftBalance[type - 1] = amount;
 		},
 		clearBalance(state, payload) {
 			state.nftBalance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		},
+    },
+    setAccount(state, payload) {
+      const { reward, lastUpdateTime, stage } = payload;
+      state.reward = reward;
+      state.lastUpdateTime = lastUpdateTime;
+      state.stage = stage;
+    },
 		setReward(state, payload) {
 			state.reward = payload;
-		}
+    },
+    setLastUpdateTime(state, payload) {
+      state.lastUpdateTime = payload;
+    },
+    setStage(state, payload) {
+      state.stage = payload;
+    }
   },
   actions: {
     clearAccount({ commit, state }) {

@@ -126,28 +126,10 @@ export default {
       }
       setTimeout(this.startTimer, 1000 * 60 * 5);
     },
-    async getUserInformation(address) {
-      const userData = { address: address };
-      const response = await axios.get(API_URL + "/hal9k-user", {
-        params: { address: address },
-      });
-      if (response.data.lastupdatetime) {
-        this.$store.commit("account/setAccount", {
-          reward: response.data.reward,
-          stage: response.data.stage,
-          lastUpdateTime: response.data.lastupdatetime,
-        });
-        this.startTimer();
-      } else {
-        this.$store.dispatch("account/clearAccount");
-      }
-    },
-    async createUser(address, reward, startTime, stage) {
+    async createUser(address, reward) {
       const userData = {
         address: address,
-        reward: reward,
-        lastUpdateTime: startTime,
-        stage: stage,
+        reward: reward
       };
       const response = await axios.put(API_URL + "/hal9k-user", userData);
       if (response.data.address) {
@@ -163,7 +145,6 @@ export default {
       };
       const response = await axios.post(API_URL + "/hal9k-user", userData);
       if (response.reward === reward) {
-        console.log("Update success!");
         this.$store.commit(
           "account/setReward",
           reward
@@ -189,21 +170,48 @@ export default {
       const res = await this.hal9kNftPool.methods.isHal9kStakingStarted(sender).call();
       console.log(res);
     },
+    async getReward(address) {
+      const userData = { address: address };
+      const response = await axios.get(API_URL + "/hal9k-user", {
+        params: { address: address },
+      });
+      if (response.data.reward) {
+        this.$store.commit("account/setReward", response.data.reward);
+        return true;
+      } else {
+        this.$store.dispatch("account/clearAccount");
+        return false;
+      }
+    },
     async getStakeStartTime(sender) {
       if (!this.hal9kNftPool) return;
       const res = await this.hal9kNftPool.methods.getStakeStartTime(sender).call({from: this.address});
       console.log(res);
     },
-    async getStakedAmountOfUser(sender) {
+    async getLastUpdateTime(sender) {
+      if (!this.hal9kNftPool) return;
+      const res = await this.hal9kNftPool.methods.getLastUpdateTime(sender).call({ from: this.address });
+      this.$store.commit("account/setLastUpdateTime", res);
+    },
+    async getStakedAmount(sender) {
       if (!this.hal9kNftPool) return;
       const res = await this.hal9kNftPool.methods.getStakedAmountOfUser(sender).call({from: this.address});
       console.log(res);
-    }
+    },
+    async getCurrentStage(sender) {
+      if (!this.hal9kNftPool) return;
+      const res = await this.hal9kNftPool.methods.getCurrentStage(sender).call({from: this.address});
+      console.log(res);
+      this.$store.commit("account/setStage", res);
+    },
   },
   async mounted() {
-    this.getUserInformation(this.address);
-    this.getStakedAmountOfUser(this.address);
-    this.getStakeStartTime(this.address);
+    await this.getReward(this.address);
+    await this.getCurrentStage(this.address);
+    await this.getStakeStartTime(this.address);
+    await this.getLastUpdateTime(this.address);
+    await this.getStakedAmount(this.address);
+    this.startTimer();
   },
 };
 </script>

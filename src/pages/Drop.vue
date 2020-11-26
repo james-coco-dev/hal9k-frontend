@@ -53,6 +53,7 @@ export default {
     ...mapState({
       stage: (state) => state.account.stage,
       address: (state) => state.account.address,
+      lastUpdateTime: (state) => state.lastUpdateTime,
       reward: (state) => state.account.reward,
       hal9k: (state) => state.contract.hal9k,
       hal9kNftPool: (state) => state.contract.hal9kNftPool
@@ -64,28 +65,25 @@ export default {
     }
   },
   methods: {
-    async updateUser(address, stage, lastUpdateTime, reward) {
-      const userData = {
-        address: address,
-        stage: stage,
-        lastUpdateTime: lastUpdateTime,
-        reward: reward,
-      };
-      const response = await axios.post(API_URL + "/hal9k-user", userData);
-      console.log("Successfully updated the user :", response);
-    },
     async moveStage(backOrForth) {
       // Back if true, Forth if false
-      const returnValue = await this.hal9kNftPool.methods
+      const res = await this.hal9kNftPool.methods
         .moveStageBackOrForth(backOrForth)
         .send({ from: this.address });
-      if (returnValue && returnValue.events.stageUpdated.returnValues.stage) {
-        this.$snotify.success(`Stage updated to ${returnValue.events.stageUpdated.returnValues.stage}`);
-        this.updateUser(
-          this.address,
-          returnValue.events.stageUpdated.returnValues.stage,
-          returnValue.events.stageUpdated.returnValues.lastUpdateTime
+      if (res && res.events.stageUpdated.returnValues.stage > this.stage) {
+        this.$snotify.success(`Stage updated to ${res.events.stageUpdated.returnValues.stage}`);
+        await this.setUserReward(this.address,11);
+        this.$store.commit(
+          "account/setAccount",
+          {
+            lastUpdateTime: res.events.stageUpdated.returnValues.lastUpdateTime,
+            reward: 11,
+            stage: res.events.stageUpdated.returnValues.stage
+          }
         );
+      } else {
+        this.$snotify.error("Need to wait more to move to next stage");
+        return;
       }
     },
     async getCardInfo(reward) {
@@ -101,13 +99,10 @@ export default {
     async setUserReward(address, reward) {
       const userData = {
         address: address,
-        reward: reward,
-        lastUpdateTime: null,
-        stage: null,
+        reward: reward
       };
       const response = await axios.post(API_URL + "/hal9k-user", userData);
       if (response.reward === reward) {
-        console.log("Update success!");
         this.$store.commit(
           "account/setReward",
           reward
@@ -116,9 +111,9 @@ export default {
     },
     upgrade() {
     },
-    moveToNextStage() {
-      this.moveStage(false);
-      this.setUserReward(this.address, 11);
+    async moveToNextStage() {
+      await this.moveStage(false);
+      await this.setUserReward(this.address, 11);
     },
     async claim() {
       // Mint card for user
@@ -128,8 +123,8 @@ export default {
         return;
       }
       this.$snotify.success("Successfully minted for you!");
-      this.moveStage(true);      // Move one stage back
-      this.setUserReward(this.address, 11);
+      await this.moveStage(true);      // Move one stage back
+      await this.setUserReward(this.address, 11);
     },
   },
 };
