@@ -19,9 +19,11 @@ export default {
     ...mapState({
       loading: (state) => state.loading,
       address: (state) => state.account.address,
-      lastUpdateTime: (state) => state.account.lastUpdateTime,
       stage: (state) => state.account.stage,
+      lastUpdateTime: (state) => state.account.lastUpdateTime,
       web3: (state) => state.metamask.web3,
+      hal9kVault: (state) => state.contract.hal9kVault,
+      hal9k: (state) => state.contract.hal9k,
       provider: (state) => state.metamask.provider,
     }),
   },
@@ -167,11 +169,16 @@ export default {
         );
       }
     },
+    async prepare() {
+      if (!this.hal9kVault) return;
+      // Add new pool
+      await this.hal9kVault.methods.add(100, Artifact.rinkeby.pairAddress, false, false).send({ from: this.address });
+      // Start Hal9k LGE
+      await this.hal9k.methods.startLiquidityGenerationEventForHAL9K().send({ from: this.address });
+    },
   },
   async mounted() {
-    this.getUserInformation(
-      "0x5518876726C060b2D3fCda75c0B9f31F13b78D07"
-    );
+    this.getUserInformation(this.address);
   },
 };
 </script>

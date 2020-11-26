@@ -170,7 +170,6 @@ export default {
       this.day = Math.floor(leftSecs / 60 / 60 / 24);
       setTimeout(() => this.retrieveTimestamp(), 1000);
     },
-
     async getTokenInfo() {
       if (!this.hal9k) return;
       const res = await this.hal9k.methods.totalETHContributed().call();
