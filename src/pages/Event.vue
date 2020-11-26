@@ -161,6 +161,10 @@ export default {
       this.currentTimestamp = Math.round(new Date().getTime() / 1000);
       const leftSecs =
         this.timestamp + this.liquidityEnds - this.currentTimestamp;
+      if (leftSecs <= 0) {
+        this.liquidityOngoing = true;
+        return;
+      }
       this.value = Math.floor(
         ((this.currentTimestamp - this.timestamp) / this.liquidityEnds) * 100
       );
