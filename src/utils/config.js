@@ -13,7 +13,7 @@ export const Artifact = {
     hal9kVault: "0x3E7F103Eb996dA047137D7B55c8198628c3964b1",
     hal9kNftPool: "0x1f493192909763D1B2688912Dae59E0371006151",
     hal9kv1Router: "0xe3400365f90cf5442F997Cf7E230334025889973",
-    pairAddress: "0xf702C5865eDE9E58F62f68E9857D7Caa8a6AD4ff",
+    pairAddress: "0x3E9233eE45f9bF7E6Cff20DaA2D9C49a1A513F3D",
   },
   mainnet: {
     hal9k: "",
