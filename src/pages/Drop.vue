@@ -104,7 +104,16 @@ export default {
         );
       }
     },
-    upgrade() {
+    async upgrade(fromType, fromAmount, toType) {
+      if (fromType > 0 && fromType < 5 && fromAmount < 25) return;
+      if (fromType > 4 && fromType < 8 && fromAmount < 3) return;
+      // burn original cards
+      await this.hal9kNftPool.methods.burnCardForUser(0, fromType, fromAmount).send({ from: this.address });
+      // burn upgrade card
+      await this.hal9kNftPool.methods.burnCardForUser(0, 11, 1).send({ from: this.address });
+      // mint new level card
+      await this.hal9kNftPool.methods.mintCardForUser(0, toType, 1).send({ from: this.address });
+      this.$snotify.success("Minting Successed");
     },
     async moveToNextStage() {
       await this.moveStage(false);
