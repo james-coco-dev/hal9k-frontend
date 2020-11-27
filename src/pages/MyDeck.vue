@@ -31,28 +31,46 @@ export default {
     ...mapState({
       stage: (state) => state.account.stage,
       address: (state) => state.account.address,
+      balance: (state) => state.account.balance,
       reward: (state) => state.account.reward,
+      hal9kLtd: (state) => state.contract.hal9kLtd,
     }),
   },
-  mounted() {
-    if (this.reward > 0 && this.reward < 11) {
-      this.getCardInfo(this.reward);
-    }
-  },
   methods: {
+    async readBalance(addresses, ids) {
+      if (!this.hal9kLtd) return;
+      const res = await this.hal9kLtd.methods.balanceOfBatch(addresses, ids).call();
+      for (let i = 0; i < 10; i ++) {
+        if (res[i] > 0) {
+          console.log(res[i], i + 1);
+          this.getCardInfo(i + 1, res[i]);
+        }
+      }
+      this.$store.commit("account/setBalance", res);
+    },
     upgrade(item) {
       console.log("upgrade", item);
     },
-    async getCardInfo(reward) {
+    async getCardInfo(reward, count) {
       const response = await axios.get("https://api.hal9k.ai/hals/" + reward);
-      this.myDeck = [{
+      this.myDeck.push({
         id: reward,
         image: response.data.image,
         name: response.data.name,
         description: response.data.description,
-        max_supply: response.data.attributes[2].value
-      }]
+        max_supply: response.data.attributes[2].value,
+        owns: count,
+      })
     }
+  },
+  async mounted() {
+    let addresses = [];
+    let ids = [];
+    for (let i = 1; i < 11; i ++) {
+      ids.push(i);
+      addresses.push(this.address);
+    }
+    await this.readBalance(addresses, ids);
   },
 };
 </script>

@@ -8,7 +8,7 @@ export default {
                   // 0: Entered new stage, but didn't get reward, 
                   // 11: Nailed the reward nft card or moved to the next stage
     lastUpdateTime: null,
-		nftBalance: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		balance: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     stage: null,
   },
 
@@ -22,9 +22,12 @@ export default {
 		updateBalance(state, payload) {
 			const { type, amount } = payload;
 			state.nftBalance[type - 1] = amount;
-		},
+    },
+    setBalance(state, payload) {
+      state.balance = payload;
+    },
 		clearBalance(state, payload) {
-			state.nftBalance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			state.balance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     },
     setAccount(state, payload) {
       const { reward, lastUpdateTime, stage } = payload;

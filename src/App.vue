@@ -225,6 +225,11 @@ export default {
       console.log(res);
       this.$store.commit("account/setStage", res);
     },
+    async confirmVaultInitialize() {
+      if (!this.hal9kVault) return;
+      const res = await this.hal9kVault.methods._hal9kNftPool().call();
+      console.log(res);
+    },
     async load() {
       await this.getReward(this.address);
       await this.getCurrentStage(this.address);
@@ -236,6 +241,7 @@ export default {
   },
   async mounted() {
     await this.load();
+    // await this.confirmVaultInitialize();
   },
 };
 </script>

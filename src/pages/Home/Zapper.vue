@@ -76,7 +76,6 @@ export default {
   methods: {
     async swap() {
       try {
-        console.log(this.autoStake);
         const {
           transactionHash,
         } = await this.hal9kv1Router.methods

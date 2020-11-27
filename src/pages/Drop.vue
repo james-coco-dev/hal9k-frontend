@@ -59,11 +59,6 @@ export default {
       hal9kNftPool: (state) => state.contract.hal9kNftPool
     }),
   },
-  mounted() {
-    if (this.reward > 0 && this.reward < 11) {
-      this.getCardInfo(this.reward);
-    }
-  },
   methods: {
     async moveStage(backOrForth) {
       // Back if true, Forth if false
@@ -116,8 +111,9 @@ export default {
       await this.setUserReward(this.address, 11);
     },
     async claim() {
+      if (!this.hal9kNftPool) return;
       // Mint card for user
-      const returnValue = await this.hal9kNftPool.methods.mintCardForUser(0, this.reward, 1).call();
+      const returnValue = await this.hal9kNftPool.methods.mintCardForUser(0, this.reward, 1).send({from: this.address});
       if (!returnValue || !returnValue.events.minted.cardId) {
         this.$snotify.error("Failed to mint the card!");
         return;
@@ -126,6 +122,11 @@ export default {
       await this.moveStage(true);      // Move one stage back
       await this.setUserReward(this.address, 11);
     },
+  },
+  async mounted() {
+    if (this.reward > 0 && this.reward < 11) {
+      this.getCardInfo(this.reward);
+    }
   },
 };
 </script>
