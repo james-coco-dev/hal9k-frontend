@@ -85,7 +85,7 @@ export default {
             value: this.web3.utils.toWei(this.ethAmount),
           });
         const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
-        if (tx) this.$snotify.succss(`Successfully swapped ${this.ethAmount}`);
+        if (tx) this.$snotify.success(`Successfully swapped ${this.ethAmount}`);
       } catch (error) {
         this.$snotify.error(error.message);
       }
