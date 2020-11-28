@@ -105,7 +105,7 @@ export default {
     timestamp: 0,
     currentTimestamp: 0,
     //liquidityEnds: 7 * 24 * 60 * 60,
-    liquidityEnds: 10 * 60,
+    liquidityEnds: 2 * 60,
     day: 0,
     hour: 0,
     min: 0,
@@ -161,10 +161,6 @@ export default {
       this.currentTimestamp = Math.round(new Date().getTime() / 1000);
       const leftSecs =
         this.timestamp + this.liquidityEnds - this.currentTimestamp;
-      if (leftSecs <= 0) {
-        this.liquidityOngoing = true;
-        return;
-      }
       this.value = Math.floor(
         ((this.currentTimestamp - this.timestamp) / this.liquidityEnds) * 100
       );
@@ -172,6 +168,10 @@ export default {
       this.min = Math.floor(leftSecs / 60) % 60;
       this.hour = Math.floor(leftSecs / 60 / 60) % 24;
       this.day = Math.floor(leftSecs / 60 / 60 / 24);
+      if (leftSecs <= 0) {
+        this.liquidityOngoing = false;
+        return;
+      }
       setTimeout(() => this.retrieveTimestamp(), 1000);
     },
     async getTokenInfo() {
@@ -235,15 +235,7 @@ export default {
         this.liquidityOngoing = await this.hal9k.methods
           .liquidityGenerationOngoing()
           .call();
-        if (!this.liquidityOngoing) {
-          const LPGenerationCompleted = await this.hal9k.methods
-            .LPGenerationCompleted()
-            .call();
-          if (!LPGenerationCompleted)
-            await this.hal9k.methods
-              .addLiquidityToUniswapHAL9KxWETHPair()
-              .send({ from: this.address });
-        } else {
+        if (this.liquidityOngoing) {
           const balance = await this.web3.eth.getBalance(this.address);
           this.ethToDeposit = new BigNumber(
             this.web3.utils.fromWei(balance)

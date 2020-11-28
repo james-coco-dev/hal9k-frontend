@@ -12,12 +12,12 @@ export const POOLS_KEY = "https://api.hal9k.ai/pools/";
 
 export const Artifact = {
   rinkeby: {
-    hal9k: "0x91d7f0e332fd463eC20a0Dfc4c13c56b9BA2b768",
-    hal9kLtd: "0x8Cf6726e12c8B3D799a6e0558fAe4671076a13Aa",
-    hal9kVault: "0xeBABb615a4B52114DBefE6E4830401df5f021Da2",
-    hal9kNftPool: "0xf59B03F0785C16ee706a7bfa59453E03CC1Fee72",
-    hal9kv1Router: "0x69D1BB385916Da08A4d922FF801948B390F484bA",
-    pairAddress: "0x4c94A60709D6FDf5A246BFA16ffd15c328C7eDe5",
+    hal9k: "0x53dEf6252a3b5e3f5aea8009B6Da528DA02D7a65",
+    hal9kLtd: "0xA1A94F6348E18C9c70b41B7803c1a0fAceCEdDBf",
+    hal9kVault: "0x50a22b99Ad350cD7A6C2FfC643D78fdD4F97e468",
+    hal9kNftPool: "0xe7FBdc4B11405431e480F165734D53258EF52C48",
+    hal9kv1Router: "0x880307AD33CB38895c1AB242dF76fDd6Ce1435BA",
+    pairAddress: "0x3C7218C374DFB29b07a9255736DC95919f2b74cb",
   },
   mainnet: {
     hal9k: "",
