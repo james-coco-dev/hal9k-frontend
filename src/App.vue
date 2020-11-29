@@ -238,10 +238,26 @@ export default {
       await this.getStakedAmount(this.address);
       this.startTimer();
     },
+    async updateWaitTimeUnit(seconds) {
+      if (!this.hal9kNftPool) return;
+      const res = await this.hal9kNftPool.methods.updateWaitTimeUnit(seconds).send({from: this.address});
+      if (res.events.waitTimeUnitUpdated.returnValues.waitTimeUnit) {
+        this.$snotify.success("Successfully updated wait time unit");
+      }
+    },
+    async isHal9kStakingStarted(sender) {
+      if (!this.hal9kNftPool) return;
+      const res = await this.hal9kNftPool.methods.isHal9kStakingStarted(sender).call();
+      console.log(res);
+    },
+    async getStakedAmountOfUser(sender) {
+      if (!this.hal9kNftPool) return;
+      const res = await this.hal9kNftPool.methods.getStakedAmountOfUser(sender).call();
+      console.log(res);
+    }
   },
   async mounted() {
     await this.load();
-    // await this.confirmVaultInitialize();
   },
 };
 </script>
