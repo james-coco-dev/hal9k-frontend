@@ -20,3 +20,71 @@
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }
+
+.pool-item {
+  height: 100%;
+  position: relative;
+  background: rgba(2, 18, 33, 0.85);
+  border: #0084ff 1px solid;
+  .select-indicator {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    z-index: 1;
+    right: 10px;
+    top: 0px;
+    background: url("./static/images/checked.png") no-repeat right center/20px;
+  }
+  .pool-image {
+    position: relative;
+    display: inline-grid;
+    img {
+      max-width: 100%;
+      border-bottom: #0084ff 1px solid;
+    }
+    .indicator {
+      position: absolute;
+      font-size: 1rem;
+      color: white;
+      bottom: -15px;
+      left: 50%;
+      outline: 0;
+      transform: translateX(-50%);
+      display: inline-flex;
+      .supply {
+        background-color: #0084ff;
+        padding: 5px 10px;
+        border-radius: 8px;
+        text-align: center;
+        white-space: nowrap;
+        text-transform: uppercase;
+        &.left-radius {
+          border-radius: 8px 0 0 8px;
+        }
+      }
+      .remaining {
+        padding: 5px 10px;
+        margin-left: -1px;
+        white-space: nowrap;
+        text-align: center;
+        text-transform: uppercase;
+        border-radius: 0 8px 8px 0;
+        background: #005fc9;
+      }
+    }
+  }
+  .pool-info {
+    margin-top: 20px;
+    text-align: center;
+    margin-bottom: 1rem;
+    .nft-name {
+      font-size: 1rem;
+      font-weight: bold;
+      color: rgb(0, 180, 255);
+    }
+    .nft-description {
+      margin: 1rem 0;
+      color: white;
+    }
+  }
+}

@@ -65,3 +65,5 @@ export const NFTConfig = {
 
   // We should have graphical interface that shows their progress and probabilities for their current stage.
 };
+
+export const UPGRADE_ID = 11;
