@@ -25,15 +25,21 @@
           </div>
           <div>Welcome to NFT dropchance</div>
           <div class="button-group">
-            <button class="button-4" v-if="droppedNft.length" @click="upgrade">Upgrade</button>
-            <button class="button-4" v-if="droppedNft.length" @click="claim">Claim</button>
-            <button class="button-4" @click="moveToNextStage">Next Stage</button>
+            <button class="button-4" v-if="droppedNft.length" @click="upgrade">
+              Upgrade
+            </button>
+            <button class="button-4" v-if="droppedNft.length" @click="claim">
+              Claim
+            </button>
+            <button class="button-4" @click="moveToNextStage">
+              Next Stage
+            </button>
           </div>
         </div>
       </section>
       <section class="screen">
         <p class="label">Chart</p>
-        <img width="100%" src="@/static/images/upchart.jpg" />
+        <img width="100%" src="@/static/images/dropchance-chart.gif" />
       </section>
     </div>
   </div>
@@ -56,7 +62,7 @@ export default {
       lastUpdateTime: (state) => state.lastUpdateTime,
       reward: (state) => state.account.reward,
       hal9k: (state) => state.contract.hal9k,
-      hal9kNftPool: (state) => state.contract.hal9kNftPool
+      hal9kNftPool: (state) => state.contract.hal9kNftPool,
     }),
   },
   methods: {
@@ -66,16 +72,15 @@ export default {
         .moveStageBackOrForth(backOrForth)
         .send({ from: this.address });
       if (res && res.events.stageUpdated.returnValues.stage > this.stage) {
-        this.$snotify.success(`Stage updated to ${res.events.stageUpdated.returnValues.stage}`);
-        await this.setUserReward(this.address,11);
-        this.$store.commit(
-          "account/setAccount",
-          {
-            lastUpdateTime: res.events.stageUpdated.returnValues.lastUpdateTime,
-            reward: 11,
-            stage: res.events.stageUpdated.returnValues.stage
-          }
+        this.$snotify.success(
+          `Stage updated to ${res.events.stageUpdated.returnValues.stage}`
         );
+        await this.setUserReward(this.address, 11);
+        this.$store.commit("account/setAccount", {
+          lastUpdateTime: res.events.stageUpdated.returnValues.lastUpdateTime,
+          reward: 11,
+          stage: res.events.stageUpdated.returnValues.stage,
+        });
       } else {
         this.$snotify.error("Need to wait more to move to next stage");
         return;
@@ -83,36 +88,41 @@ export default {
     },
     async getCardInfo(reward) {
       const response = await axios.get("https://api.hal9k.ai/hals/" + reward);
-      this.droppedNft = [{
-        id: reward,
-        image: response.data.image,
-        name: response.data.name,
-        description: response.data.description,
-        max_supply: response.data.attributes[2].value
-      }]
+      this.droppedNft = [
+        {
+          id: reward,
+          image: response.data.image,
+          name: response.data.name,
+          description: response.data.description,
+          max_supply: response.data.attributes[2].value,
+        },
+      ];
     },
     async setUserReward(address, reward) {
       const userData = {
         address: address,
-        reward: reward
+        reward: reward,
       };
       const response = await axios.post(API_URL + "/hal9k-user", userData);
       if (response.reward === reward) {
-        this.$store.commit(
-          "account/setReward",
-          reward
-        );
+        this.$store.commit("account/setReward", reward);
       }
     },
     async upgrade(fromType, fromAmount, toType) {
       if (fromType > 0 && fromType < 5 && fromAmount < 25) return;
       if (fromType > 4 && fromType < 8 && fromAmount < 3) return;
       // burn original cards
-      await this.hal9kNftPool.methods.burnCardForUser(0, fromType, fromAmount).send({ from: this.address });
+      await this.hal9kNftPool.methods
+        .burnCardForUser(0, fromType, fromAmount)
+        .send({ from: this.address });
       // burn upgrade card
-      await this.hal9kNftPool.methods.burnCardForUser(0, 11, 1).send({ from: this.address });
+      await this.hal9kNftPool.methods
+        .burnCardForUser(0, 11, 1)
+        .send({ from: this.address });
       // mint new level card
-      await this.hal9kNftPool.methods.mintCardForUser(0, toType, 1).send({ from: this.address });
+      await this.hal9kNftPool.methods
+        .mintCardForUser(0, toType, 1)
+        .send({ from: this.address });
       this.$snotify.success("Minting Successed");
     },
     async moveToNextStage() {
@@ -122,13 +132,15 @@ export default {
     async claim() {
       if (!this.hal9kNftPool) return;
       // Mint card for user
-      const returnValue = await this.hal9kNftPool.methods.mintCardForUser(0, this.reward, 1).send({from: this.address});
+      const returnValue = await this.hal9kNftPool.methods
+        .mintCardForUser(0, this.reward, 1)
+        .send({ from: this.address });
       if (!returnValue || !returnValue.events.minted.returnValues.cardId) {
         this.$snotify.error("Failed to mint the card!");
         return;
       }
       this.$snotify.success("Successfully minted for you!");
-      await this.moveStage(true);      // Move one stage back
+      await this.moveStage(true); // Move one stage back
       await this.setUserReward(this.address, 11);
     },
   },
