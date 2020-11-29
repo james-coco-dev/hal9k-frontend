@@ -40,9 +40,9 @@ export default {
     async readBalance(addresses, ids) {
       if (!this.hal9kLtd) return;
       const res = await this.hal9kLtd.methods.balanceOfBatch(addresses, ids).call();
-      for (let i = 0; i < 10; i ++) {
+      for (let i = 0; i < 11; i ++) {
+        console.log(res[i], i + 1);
         if (res[i] > 0) {
-          console.log(res[i], i + 1);
           this.getCardInfo(i + 1, res[i]);
         }
       }
