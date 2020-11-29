@@ -40,8 +40,7 @@ export default {
     async readBalance(addresses, ids) {
       if (!this.hal9kLtd) return;
       const res = await this.hal9kLtd.methods.balanceOfBatch(addresses, ids).call();
-      for (let i = 0; i < 11; i ++) {
-        console.log(res[i], i + 1);
+      for (let i = 0; i < 12; i ++) {
         if (res[i] > 0) {
           this.getCardInfo(i + 1, res[i]);
         }
@@ -66,7 +65,7 @@ export default {
   async mounted() {
     let addresses = [];
     let ids = [];
-    for (let i = 1; i < 11; i ++) {
+    for (let i = 1; i < 12; i ++) {
       ids.push(i);
       addresses.push(this.address);
     }
