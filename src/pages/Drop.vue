@@ -123,7 +123,7 @@ export default {
       if (!this.hal9kNftPool) return;
       // Mint card for user
       const returnValue = await this.hal9kNftPool.methods.mintCardForUser(0, this.reward, 1).send({from: this.address});
-      if (!returnValue || !returnValue.events.minted.cardId) {
+      if (!returnValue || !returnValue.events.minted.returnValues.cardId) {
         this.$snotify.error("Failed to mint the card!");
         return;
       }
@@ -136,6 +136,7 @@ export default {
     if (this.reward > 0 && this.reward < 11) {
       this.getCardInfo(this.reward);
     }
+    // await this.claim()
   },
 };
 </script>
