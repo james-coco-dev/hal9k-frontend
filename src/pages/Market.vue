@@ -16,6 +16,7 @@ import { mapState } from "vuex";
 import axios from "axios";
 import PoolItem from "@/components/PoolItem";
 import { POOLS_KEY } from "@/utils/config";
+import { UPGRADE_ID } from "../utils/config";
 export default {
   data: () => ({
     pools: [],
@@ -40,6 +41,7 @@ export default {
   },
   async mounted() {
     await this.loadContract();
+    await this.getTotalMinted();
   },
   methods: {
     async loadContract() {
@@ -53,6 +55,11 @@ export default {
       }
       this.$store.commit("loading", false);
       this.pools = upgradeCards;
+    },
+    async getTotalMinted() {
+      if (!this.hal9kLtd) return;
+      const res = await this.hal9kLtd.methods.totalSupply(UPGRADE_ID).call();
+      console.log("Distributed upgrade cards: ", res);
     },
     buy(id) {},
   },
