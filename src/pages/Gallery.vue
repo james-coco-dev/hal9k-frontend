@@ -28,11 +28,11 @@ export default {
     PoolItem,
   },
   async mounted() {
-    await this.onSelectPool("V1968");
+    await this.loadPool("V1968");
   },
   methods: {
     checkOpenSea(id) {},
-    async onSelectPool(pool) {
+    async loadPool(pool) {
       this.loading = true;
       this.$store.commit("loading", true);
       const { data } = await axios.get(POOLS_KEY + pool);

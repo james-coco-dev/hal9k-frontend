@@ -10,6 +10,7 @@
         <router-link class="menu-item" to="/">MAIN CONSOLE</router-link>
         <router-link class="menu-item" to="/event">LGE EVENT</router-link>
         <router-link class="menu-item" to="/gallery">NFT GALLERY</router-link>
+        <router-link class="menu-item" to="/market">MARKET</router-link>
         <router-link class="menu-item" to="/deck">MY DECK</router-link>
         <router-link class="menu-item" to="/drop">NFT REWARD</router-link>
       </div>
@@ -43,7 +44,7 @@ export default {
       text-decoration: none;
       background: white;
       padding: 12px 16px;
-      text-align: center;
+      text-align: left;
       color: #444;
       &:hover {
         background: #eee;

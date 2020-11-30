@@ -7,6 +7,7 @@ import Zapper from "@/pages/Home/Zapper";
 import Event from "@/pages/Event";
 import Gallery from "@/pages/Gallery";
 import MyDeck from "@/pages/MyDeck";
+import Market from "@/pages/Market";
 import Drop from "@/pages/Drop";
 
 Vue.use(VueRouter);
@@ -41,6 +42,11 @@ const routes = [
     path: "/gallery",
     name: "Gallery",
     component: Gallery,
+  },
+  {
+    path: "/market",
+    name: "Market",
+    component: Market,
   },
   {
     path: "/drop",
