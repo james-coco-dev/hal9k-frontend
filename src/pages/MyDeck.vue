@@ -79,6 +79,25 @@ export default {
     },
   },
   methods: {
+    getCardType(category) {
+      let cardType = 0;
+      switch (category) {
+        case 1: // Common
+          cardType = Math.floor(Math.random() * 5);
+          break;
+        case 2: // Rare
+          cardType = Math.floor(Math.random() * 4) + 4;
+          break;
+        case 3: // Epic
+          cardType = Math.floor(Math.random() * 3) + 7;
+          break;
+        case 4: // Legendary
+        default:
+          cardType = 10;
+          break;
+      }
+      return cardType;
+    },
     itemClicked(index) {
       if (index >= this.selected.length) return;
       this.$set(this.selected, index, !this.selected[index]);
@@ -92,13 +111,67 @@ export default {
         if (elem && index !== upgradeCardIndex)
           return itemIndexArray.push(index);
       });
-      console.log(itemIndexArray, upgradeCardIndex);
+      
+      // console.log(itemIndexArray, upgradeCardIndex);
+      let upgradeCardCount = parseInt(this.myDeck[upgradeCardIndex].owns);
+
+      itemIndexArray.map((elem, index) => {
+        console.log(this.myDeck[elem]);
+        const fromId = this.myDeck[elem].id;
+        const fromCount = parseInt(this.myDeck[elem].owns);
+
+        if (fromId > 0 && fromId < 5 && fromCount >= 25) { // Common to Rare
+          this.upgradeCard(fromId, 25, this.getCardType(1));
+          upgradeCardCount --;
+        } else if (fromId > 4 && fromId < 8 && fromCount >= 3) { // Rare to Epic
+          this.upgradeCard(fromId, 3, this.getCardInfo(2));
+          upgradeCardCount --;
+        } else if (fromId > 7 && fromId < 10 && fromCount >= 1) { // Epic to Legendary
+          this.upgradeCard(fromId, 1, this.getCardInfo(3));
+          upgradeCardCount --;
+        }
+      })
     },
-    async readBalance(addresses, ids) {
+    async upgradeCard(fromType, fromAmount, toType) {
+      if (fromType > 0 && fromType < 5 && fromAmount < 25) {
+        this.$snotify.info("You should have more than 25 Common cards to upgrade to Rare.")
+        return;
+      }
+      if (fromType > 4 && fromType < 8 && fromAmount < 3) {
+        this.$snotify.info("You should have more than 3 Rare cards to upgrade to Epic.")
+        return;
+      }
+      // burn original cards
+      await this.hal9kNftPool.methods
+        .burnCardForUser(0, fromType, fromAmount)
+        .send({ from: this.address });
+      // burn upgrade card
+      await this.hal9kNftPool.methods
+        .burnCardForUser(0, 11, 1)
+        .send({ from: this.address });
+      // mint new level card
+      await this.hal9kNftPool.methods
+        .mintCardForUser(0, toType, 1)
+        .send({ from: this.address });
+
+      await this.readBalance();
+      this.$snotify.success("Minting Successed");
+    },
+    async readBalance() {
       if (!this.hal9kLtd) return;
+
+      let addresses = [];
+      let ids = [];
+      
+      for (let i = 1; i < 12; i++) {
+        ids.push(i);
+        addresses.push(this.address);
+      }
+
       const res = await this.hal9kLtd.methods
         .balanceOfBatch(addresses, ids)
         .call();
+
       for (let i = 0; i < 12; i++) {
         if (res[i] > 0) {
           this.getCardInfo(i + 1, res[i]);
@@ -118,15 +191,10 @@ export default {
       });
       this.selected.push(false);
     },
+    
   },
   async mounted() {
-    let addresses = [];
-    let ids = [];
-    for (let i = 1; i < 12; i++) {
-      ids.push(i);
-      addresses.push(this.address);
-    }
-    await this.readBalance(addresses, ids);
+    await this.readBalance();
   },
 };
 </script>
