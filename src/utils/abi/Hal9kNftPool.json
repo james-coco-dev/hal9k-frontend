@@ -137,6 +137,25 @@
             {
                 "indexed": false,
                 "internalType": "address",
+                "name": "addr",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "newCardId",
+                "type": "uint256"
+            }
+        ],
+        "name": "upgraded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
                 "name": "newAddress",
                 "type": "address"
             },
@@ -515,6 +534,39 @@
             }
         ],
         "name": "updateWaitTimeUnit",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_pid",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_fromCardId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_fromCardCount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_toCardId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_upgradeCardId",
+                "type": "uint256"
+            }
+        ],
+        "name": "upgradeCard",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
