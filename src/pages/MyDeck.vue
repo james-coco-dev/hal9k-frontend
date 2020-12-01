@@ -29,10 +29,10 @@
           <div class="pool-image">
             <img :src="nft.image" :alt="nft.name" />
             <div class="indicator">
-              <div class="supply" :class="{ 'left-radius': nft.owns }">
-                {{ nft.max_supply }} Minted
+              <div class="left" :class="{ 'left-radius': nft.owns }">
+                {{ nft.max_supply }} MAX
               </div>
-              <div class="remaining" v-if="nft.owns">{{ nft.owns }} Own</div>
+              <div class="right" v-if="nft.owns">{{ nft.owns }} Own</div>
             </div>
           </div>
           <div class="pool-info">
@@ -67,8 +67,9 @@ export default {
       address: (state) => state.account.address,
       balance: (state) => state.account.balance,
       reward: (state) => state.account.reward,
+      provider: (state) => state.metamask.provider,
       hal9kLtd: (state) => state.contract.hal9kLtd,
-      hal9kNftPool: (state) => state.contract.hal9kNftPool
+      hal9kNftPool: (state) => state.contract.hal9kNftPool,
     }),
     isUpgradeSelected() {
       const selectedCount = this.selected.filter((elem) => elem).length;
@@ -77,6 +78,14 @@ export default {
       );
       if (selectedCount >= 2 && upgradeSelectedIndex >= 0) return true;
       return false;
+    },
+  },
+  watch: {
+    async provider() {
+      await this.readBalance();
+    },
+    async address() {
+      await this.readBalance();
     },
   },
   methods: {
@@ -112,7 +121,7 @@ export default {
         if (elem && index !== upgradeCardIndex)
           return itemIndexArray.push(index);
       });
-      
+
       // console.log(itemIndexArray, upgradeCardIndex);
       let upgradeCardCount = parseInt(this.myDeck[upgradeCardIndex].owns);
 
@@ -120,37 +129,51 @@ export default {
         const fromId = this.myDeck[elem].id;
         const fromCount = parseInt(this.myDeck[elem].owns);
 
-        if (fromId > 0 && fromId < 5) { // Common to Rare
+        if (fromId > 0 && fromId < 5) {
+          // Common to Rare
           if (fromCount >= 25) {
             this.upgradeCard(fromId, 25, this.getCardType(2));
-            upgradeCardCount --;
+            upgradeCardCount--;
           } else {
-            this.$snotify.info("You should have more than 25 Common cards to upgrade to Rare.")
+            this.$snotify.info(
+              "You should have more than 25 Common cards to upgrade to Rare."
+            );
           }
-        } else if (fromId > 4 && fromId < 8) { // Rare to Epic
+        } else if (fromId > 4 && fromId < 8) {
+          // Rare to Epic
           if (fromCount >= 3) {
             this.upgradeCard(fromId, 3, this.getCardType(3));
-            upgradeCardCount --;
+            upgradeCardCount--;
           } else {
-            this.$snotify.info("You should have more than 3 Rare cards to upgrade to Epic.")
+            this.$snotify.info(
+              "You should have more than 3 Rare cards to upgrade to Epic."
+            );
           }
-        } else if (fromId > 7 && fromId < 10) { // Epic to Legendary
+        } else if (fromId > 7 && fromId < 10) {
+          // Epic to Legendary
           if (fromCount >= 1) {
             this.upgradeCard(fromId, 1, this.getCardType(4));
-            upgradeCardCount --;
+            upgradeCardCount--;
           } else {
-            this.$snotify.info("You should have more than 1 Rare cards to upgrade to Legendary.")
+            this.$snotify.info(
+              "You should have more than 1 Rare cards to upgrade to Legendary."
+            );
           }
         }
-      })
+      });
     },
     async upgradeCard(fromType, fromAmount, toType) {
       if (!this.hal9kNftPool) return;
       console.log(fromType, fromAmount, toType);
 
-      const returnValue = await this.hal9kNftPool.methods.upgradeCard(0, fromType, fromAmount, toType, UPGRADE_ID).send({ from: this.address });
-      console.log(returnValue)
-      if (returnValue && parseInt(returnValue.events.upgraded.returnValues.newCardId) === toType) {
+      const returnValue = await this.hal9kNftPool.methods
+        .upgradeCard(0, fromType, fromAmount, toType, UPGRADE_ID)
+        .send({ from: this.address });
+      console.log(returnValue);
+      if (
+        returnValue &&
+        parseInt(returnValue.events.upgraded.returnValues.newCardId) === toType
+      ) {
         this.$snotify.success("Upgrading Successed");
         await this.readBalance();
       } else {
@@ -162,7 +185,7 @@ export default {
 
       let addresses = [];
       let ids = [];
-      
+
       for (let i = 1; i < 12; i++) {
         ids.push(i);
         addresses.push(this.address);
@@ -191,7 +214,6 @@ export default {
       });
       this.selected.push(false);
     },
-    
   },
   async mounted() {
     await this.readBalance();

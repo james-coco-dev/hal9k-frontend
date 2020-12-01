@@ -4,10 +4,11 @@
       <div class="pool-image">
         <img :src="nft.image" :alt="nft.name" />
         <div class="indicator">
-          <div class="supply" :class="{ 'left-radius': nft.owns }">
-            {{ nft.max_supply }} Minted
+          <div class="left" :class="{ 'left-radius': nft.owns || nft.minted }">
+            {{ nft.max_supply }} MAX
           </div>
-          <div class="remaining" v-if="nft.owns">{{ nft.owns }} Own</div>
+          <div class="right" v-if="nft.minted">{{ nft.minted }} MINTED</div>
+          <div class="right" v-else-if="nft.owns">{{ nft.owns }} Own</div>
         </div>
       </div>
       <div class="pool-info">

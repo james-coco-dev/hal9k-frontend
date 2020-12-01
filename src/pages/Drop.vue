@@ -39,7 +39,7 @@
       </section>
       <section class="screen">
         <p class="label">Chart</p>
-        <img width="100%" src="@/static/images/dropchance-chart.gif" />
+        <img width="100%" src="@/static/images/dropchances.gif" />
       </section>
     </div>
   </div>
@@ -108,7 +108,7 @@ export default {
         this.$store.commit("account/setReward", reward);
       }
     },
-    
+
     async moveToNextStage() {
       await this.moveStage(false);
       await this.setUserReward(this.address, 11);

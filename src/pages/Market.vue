@@ -26,8 +26,8 @@ export default {
   },
   computed: {
     ...mapState({
+      web3: (state) => state.metamask.web3,
       provider: (state) => state.metamask.provider,
-      address: (state) => state.account.address,
       hal9kLtd: (state) => state.contract.hal9kLtd,
     }),
   },
@@ -35,31 +35,26 @@ export default {
     async provider() {
       await this.loadContract();
     },
-    async address() {
-      await this.loadContract();
-    },
   },
   async mounted() {
     await this.loadContract();
-    await this.getTotalMinted();
   },
   methods: {
     async loadContract() {
+      if (!this.hal9kLtd) return;
       this.$store.commit("loading", true);
       const { data } = await axios.get(POOLS_KEY + "V1968");
       const upgradeCards = data.filter((elem) => elem.rarity === "Upgrade");
       try {
+        upgradeCards.map(async (card) => {
+          const res = await this.hal9kLtd.methods.totalSupply(card.id).call();
+          this.pools = [...this.pools, { ...card, minted: parseInt(res) }];
+        });
       } catch (error) {
         console.error(error);
         this.$snotify.error(error.message);
       }
       this.$store.commit("loading", false);
-      this.pools = upgradeCards;
-    },
-    async getTotalMinted() {
-      if (!this.hal9kLtd) return;
-      const res = await this.hal9kLtd.methods.totalSupply(UPGRADE_ID).call();
-      console.log("Distributed upgrade cards: ", res);
     },
     buy(id) {},
   },

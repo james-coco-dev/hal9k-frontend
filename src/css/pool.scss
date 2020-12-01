@@ -44,14 +44,14 @@
     }
     .indicator {
       position: absolute;
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: white;
       bottom: -15px;
       left: 50%;
       outline: 0;
       transform: translateX(-50%);
       display: inline-flex;
-      .supply {
+      .left {
         background-color: #0084ff;
         padding: 5px 10px;
         border-radius: 8px;
@@ -62,7 +62,7 @@
           border-radius: 8px 0 0 8px;
         }
       }
-      .remaining {
+      .right {
         padding: 5px 10px;
         margin-left: -1px;
         white-space: nowrap;

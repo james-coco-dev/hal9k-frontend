@@ -24,20 +24,43 @@ export default {
   data: () => ({
     pools: [],
   }),
+  computed: {
+    ...mapState({
+      web3: (state) => state.metamask.web3,
+      provider: (state) => state.metamask.provider,
+      hal9kLtd: (state) => state.contract.hal9kLtd,
+    }),
+  },
   components: {
     PoolItem,
   },
+  watch: {
+    async provider() {
+      await this.loadContract();
+    },
+  },
   async mounted() {
-    await this.loadPool("V1968");
+    await this.loadContract();
   },
   methods: {
     checkOpenSea(id) {},
+    async loadContract() {
+      await this.loadPool("V1968");
+    },
     async loadPool(pool) {
-      this.loading = true;
+      if (!this.hal9kLtd) return;
       this.$store.commit("loading", true);
       const { data } = await axios.get(POOLS_KEY + pool);
+      try {
+        data.map(async (card) => {
+          const res = await this.hal9kLtd.methods.totalSupply(card.id).call();
+          this.pools = [...this.pools, { ...card, minted: parseInt(res) }];
+        });
+      } catch (error) {
+        console.error(error);
+        this.$snotify.error(error.message);
+      }
       this.$store.commit("loading", false);
-      this.pools = data;
     },
   },
 };
