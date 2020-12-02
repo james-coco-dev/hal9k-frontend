@@ -67,3 +67,8 @@ export const NFTConfig = {
 };
 
 export const UPGRADE_ID = 11;
+
+export const NETWORK = {
+  MAINNET: 1,
+  RINKEBY: 4,
+};

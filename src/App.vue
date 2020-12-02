@@ -160,7 +160,7 @@ export default {
       if (!this.hal9kVault || !this.hal9k) return;
       // Add new pool
       await this.hal9kVault.methods
-        .add(100, Artifact.rinkeby.pairAddress, false, false)
+        .add(100, Artifact.mainnet.pairAddress, false, false)
         .send({ from: this.address });
       // Start Hal9k LGE
       await this.hal9k.methods

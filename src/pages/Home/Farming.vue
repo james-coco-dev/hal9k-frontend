@@ -165,7 +165,7 @@ export default {
       try {
         const res = await this.hal9kWethPair.methods
           .approve(
-            Artifact.rinkeby.hal9kVault,
+            Artifact.mainnet.hal9kVault,
             new BigNumber(10).pow(new BigNumber(60)).toFixed()
           )
           .send({ from: this.address });
@@ -178,7 +178,7 @@ export default {
     async checkAllowance() {
       try {
         const allowance = await this.hal9kWethPair.methods
-          .allowance(this.address, Artifact.rinkeby.hal9kVault)
+          .allowance(this.address, Artifact.mainnet.hal9kVault)
           .call();
         if (allowance > 0) this.isApproved = true;
       } catch (error) {
@@ -190,7 +190,7 @@ export default {
     async checkVaultInfo() {
       try {
         const res = await this.hal9kWethPair.methods
-          .balanceOf(Artifact.rinkeby.hal9kVault)
+          .balanceOf(Artifact.mainnet.hal9kVault)
           .call();
         this.totalStaked = new BigNumber(this.web3.utils.fromWei(res)).toFixed(
           3,

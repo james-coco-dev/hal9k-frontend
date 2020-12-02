@@ -23,6 +23,7 @@ Vue.use(Snotify, {
   toast: {
     timeout: 5000,
     bodyMaxLength: 5000,
+    pauseOnHover: false,
     position: SnotifyPosition.rightTop,
   },
 });
@@ -32,7 +33,7 @@ Vue.component("nav-bar", NavBar);
 
 sync(store, router);
 
-new Vue({
+export default new Vue({
   el: "#app",
   store,
   router,

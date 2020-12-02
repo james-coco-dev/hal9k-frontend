@@ -1,5 +1,5 @@
 import detectEthereumProvider from "@metamask/detect-provider";
-import { Artifact } from "./config";
+import { Artifact, NETWORK } from "./config";
 import Hal9kJson from "./abi/Hal9k.json";
 import Hal9kLtdJson from "./abi/Hal9kLtd.json";
 import Hal9kNftPoolJson from "./abi/Hal9kNftPool.json";
@@ -8,10 +8,14 @@ import Hal9kv1Router from "./abi/Hal9kv1Router.json";
 import ERC20 from "./abi/ERC20.json";
 import store from "../store";
 import Web3 from "web3";
-
+import vue from "../main";
 class Web3Wrapper {
   handleChainChanged = (_chainId) => {
     store.commit("account/setChainId", _chainId);
+    if (parseInt(_chainId) !== NETWORK.MAINNET) {
+      this.disconnect();
+      vue.$snotify.error("Please change to the Mainnet");
+    }
   };
 
   handleAccountsChanged = (accounts) => {
@@ -38,6 +42,11 @@ class Web3Wrapper {
       } else {
         throw new Error("Please install MetaMask!");
       }
+      if (parseInt(provider.chainId) !== NETWORK.MAINNET) {
+        this.disconnect();
+        vue.$snotify.error("Please change to the Mainnet");
+        return;
+      }
       provider.on("accountsChanged", this.handleAccountsChanged);
       provider.on("chainChanged", this.handleChainChanged);
       provider.on("disconnect", (res) => {
@@ -53,36 +62,36 @@ class Web3Wrapper {
       store.commit("metamask/setProvider", provider);
       const web3 = new Web3(provider);
       store.commit("metamask/setWeb3", web3);
-      const hal9k = new web3.eth.Contract(Hal9kJson, Artifact.rinkeby.hal9k);
+      const hal9k = new web3.eth.Contract(Hal9kJson, Artifact.mainnet.hal9k);
       hal9k.setProvider(provider);
 
       const hal9kLtd = new web3.eth.Contract(
         Hal9kLtdJson,
-        Artifact.rinkeby.hal9kLtd
+        Artifact.mainnet.hal9kLtd
       );
       hal9kLtd.setProvider(provider);
 
       const hal9kNftPool = new web3.eth.Contract(
         Hal9kNftPoolJson,
-        Artifact.rinkeby.hal9kNftPool
+        Artifact.mainnet.hal9kNftPool
       );
       hal9kNftPool.setProvider(provider);
 
       const hal9kVault = new web3.eth.Contract(
         Hal9kVaultJson,
-        Artifact.rinkeby.hal9kVault
+        Artifact.mainnet.hal9kVault
       );
       hal9kVault.setProvider(provider);
 
       const hal9kv1Router = new web3.eth.Contract(
         Hal9kv1Router,
-        Artifact.rinkeby.hal9kv1Router
+        Artifact.mainnet.hal9kv1Router
       );
       hal9kv1Router.setProvider(provider);
 
       const hal9kWethPair = new web3.eth.Contract(
         ERC20,
-        Artifact.rinkeby.pairAddress
+        Artifact.mainnet.pairAddress
       );
       hal9kWethPair.setProvider(provider);
       store.commit("contract/setContracts", {
