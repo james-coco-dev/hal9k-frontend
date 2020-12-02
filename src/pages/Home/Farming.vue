@@ -8,9 +8,9 @@
         HAL9K/ETH Stake Pool
       </p>
       <div class="info-box">
-        <div>
+        <!-- <div>
           <span class="yellow">{{ apy }}</span> APY
-        </div>
+        </div> -->
         <div>
           <span class="yellow">{{ totalStaked }}</span> Tokens Staked (total)
         </div>
@@ -94,12 +94,12 @@ export default {
       console.log(currentStage);
       return currentStage;
     },
-    
+
     /****************** BACKEND CALL METHODS **********************/
     async createUser(address, reward) {
       const userData = {
         address: address,
-        reward: reward
+        reward: reward,
       };
       const response = await axios.put(API_URL + "/hal9k-user", userData);
       if (response.data.address) {
@@ -145,15 +145,14 @@ export default {
           .deposit(0, this.web3.utils.toWei(this.stakeAmount))
           .send({ from: this.address });
         const startTime = res.events.Deposit.returnValues.startTime;
-        const tx = await this.web3.eth.getTransactionReceipt(res.transactionHash);
+        const tx = await this.web3.eth.getTransactionReceipt(
+          res.transactionHash
+        );
         if (tx) {
           await this.checkVaultInfo();
           this.$snotify.success("Deposit succeed...");
           if (!this.lastUpdateTime) {
-            this.createUser(
-              this.address,
-              11
-            );
+            this.createUser(this.address, 11);
             this.$snotify.success("Staking started...");
           }
         }
@@ -193,15 +192,22 @@ export default {
         const res = await this.hal9kWethPair.methods
           .balanceOf(Artifact.rinkeby.hal9kVault)
           .call();
-        this.totalStaked = this.web3.utils.fromWei(res);
+        this.totalStaked = new BigNumber(this.web3.utils.fromWei(res)).toFixed(
+          3,
+          1
+        );
         const { amount } = await this.hal9kVault.methods
           .userInfo(0, this.address)
           .call();
-        this.yourStaked = this.web3.utils.fromWei(amount);
+        this.yourStaked = new BigNumber(
+          this.web3.utils.fromWei(amount)
+        ).toFixed(3, 1);
         const pendingHal9k = await this.hal9kVault.methods
           .pendingHal9k(0, this.address)
           .call();
-        this.claimableHal9k = this.web3.utils.fromWei(pendingHal9k);
+        this.claimableHal9k = new BigNumber(
+          this.web3.utils.fromWei(pendingHal9k)
+        ).toFixed(3, 1);
       } catch (error) {
         this.$snotify.error(error.message);
         console.error(error);

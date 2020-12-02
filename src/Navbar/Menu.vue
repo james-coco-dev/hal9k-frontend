@@ -7,21 +7,37 @@
     >
       MENU
       <div class="menu-list" v-if="isOpened" @click="isOpened = false">
-        <router-link class="menu-item" to="/">MAIN CONSOLE</router-link>
+        <router-link class="menu-item" to="/" v-if="started"
+          >MAIN CONSOLE</router-link
+        >
         <router-link class="menu-item" to="/event">LGE EVENT</router-link>
-        <router-link class="menu-item" to="/gallery">NFT GALLERY</router-link>
-        <router-link class="menu-item" to="/market">MARKET</router-link>
-        <router-link class="menu-item" to="/deck">MY DECK</router-link>
-        <router-link class="menu-item" to="/drop">NFT REWARD</router-link>
+        <router-link class="menu-item" to="/gallery" v-if="started"
+          >NFT GALLERY</router-link
+        >
+        <router-link class="menu-item" to="/market" v-if="started"
+          >MARKET</router-link
+        >
+        <router-link class="menu-item" to="/deck" v-if="started"
+          >MY DECK</router-link
+        >
+        <router-link class="menu-item" to="/drop" v-if="started"
+          >NFT REWARD</router-link
+        >
       </div>
     </div>
   </section>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   data: () => ({
     isOpened: false,
   }),
+  computed: {
+    ...mapState({
+      started: (state) => state.event.started,
+    }),
+  },
 };
 </script>
 <style lang="scss" scoped>

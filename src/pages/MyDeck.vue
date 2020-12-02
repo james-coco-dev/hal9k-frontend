@@ -28,16 +28,15 @@
           <div class="select-indicator" v-show="selected[index]"></div>
           <div class="pool-image">
             <img :src="nft.image" :alt="nft.name" />
-            <div class="indicator">
-              <div class="left" :class="{ 'left-radius': nft.owns }">
-                {{ nft.max_supply }} MAX
-              </div>
-              <div class="right" v-if="nft.owns">{{ nft.owns }} Own</div>
-            </div>
           </div>
           <div class="pool-info">
+            <div class="nft-count">
+              <span class="remaining">{{ getRemainString(nft) }}</span
+              ><span class="supply"> / {{ nft.max_supply }}</span> Left
+            </div>
             <div class="nft-name">{{ nft.name }}</div>
             <div class="nft-description">{{ nft.description }}</div>
+            <div class="nft-own">{{ nft.owns }} Owned</div>
           </div>
         </div>
       </section>
@@ -89,6 +88,9 @@ export default {
     },
   },
   methods: {
+    getRemainString(item) {
+      return item.max_supply - (item.minted ? item.minted : 0);
+    },
     getCardType(category) {
       let cardType = 0;
       switch (category) {
@@ -164,20 +166,25 @@ export default {
     },
     async upgradeCard(fromType, fromAmount, toType) {
       if (!this.hal9kNftPool) return;
-      console.log(fromType, fromAmount, toType);
+      try {
+        console.log(fromType, fromAmount, toType);
 
-      const returnValue = await this.hal9kNftPool.methods
-        .upgradeCard(0, fromType, fromAmount, toType, UPGRADE_ID)
-        .send({ from: this.address });
-      console.log(returnValue);
-      if (
-        returnValue &&
-        parseInt(returnValue.events.upgraded.returnValues.newCardId) === toType
-      ) {
-        this.$snotify.success("Upgrading Successed");
-        await this.readBalance();
-      } else {
-        this.$snotify.error("Failed to upgrade");
+        const returnValue = await this.hal9kNftPool.methods
+          .upgradeCard(0, fromType, fromAmount, toType, UPGRADE_ID)
+          .send({ from: this.address });
+        console.log(returnValue);
+        if (
+          returnValue &&
+          parseInt(returnValue.events.upgraded.returnValues.newCardId) ===
+            toType
+        ) {
+          this.$snotify.success("Upgrading Successed");
+          await this.readBalance();
+        } else {
+          this.$snotify.error("Failed to upgrade");
+        }
+      } catch (err) {
+        this.$snotify.error(err.message);
       }
     },
     async readBalance() {
@@ -204,12 +211,14 @@ export default {
     },
     async getCardInfo(reward, count) {
       const response = await axios.get("https://api.hal9k.ai/hals/" + reward);
+      const minted = await this.hal9kLtd.methods.totalSupply(reward).call();
       this.myDeck.push({
         id: reward,
         image: response.data.image,
         name: response.data.name,
         description: response.data.description,
         max_supply: response.data.attributes[2].value,
+        minted,
         owns: count,
       });
       this.selected.push(false);

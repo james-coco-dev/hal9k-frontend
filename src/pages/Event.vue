@@ -222,6 +222,7 @@ export default {
       if (!this.hal9k) return;
       try {
         this.$store.commit("loading", true);
+        await this.fetchTokenPrice();
         const startTimestamp = await this.hal9k.methods
           .contractStartTimestamp()
           .call();
@@ -253,7 +254,6 @@ export default {
   },
 
   async mounted() {
-    await this.fetchTokenPrice();
     await this.loadContract();
   },
 };

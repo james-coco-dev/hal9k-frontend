@@ -3,15 +3,19 @@
     <div v-for="(nft, index) in pools" :key="index" class="pool-item">
       <div class="pool-image">
         <img :src="nft.image" :alt="nft.name" />
-        <div class="indicator">
+      </div>
+      <!-- <div class="indicator">
           <div class="left" :class="{ 'left-radius': nft.owns || nft.minted }">
             {{ nft.max_supply }} MAX
           </div>
           <div class="right" v-if="nft.minted">{{ nft.minted }} MINTED</div>
           <div class="right" v-else-if="nft.owns">{{ nft.owns }} Own</div>
-        </div>
-      </div>
+        </div> -->
       <div class="pool-info">
+        <div class="nft-count">
+          <span class="remaining">{{ getRemainString(nft) }}</span
+          ><span class="supply"> / {{ nft.max_supply }}</span> Left
+        </div>
         <div class="nft-name">{{ nft.name }}</div>
         <div class="nft-description">{{ nft.description }}</div>
         <button class="button-3" @click="onClick(nft)" v-if="hasButton">
@@ -38,6 +42,9 @@ export default {
     },
   },
   methods: {
+    getRemainString(item) {
+      return item.max_supply - (item.minted ? item.minted : 0);
+    },
     onClick(nft) {
       this.$emit("click", nft);
     },

@@ -1,6 +1,6 @@
 <template>
   <div class="nav-bar">
-    <Menu />
+    <Menu v-if="provider && address" />
     <button class="green" v-if="address" @click="disconnect">
       {{ compressAddress(address, 10, 5) }}
     </button>
@@ -20,6 +20,7 @@ export default {
   computed: {
     ...mapState({
       address: (state) => state.account.address,
+      provider: (state) => state.metamask.provider,
     }),
   },
   async mounted() {

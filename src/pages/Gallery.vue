@@ -8,6 +8,7 @@
     <div class="pool-container">
       <pool-item
         :pools="pools"
+        :hasButton="false"
         buttonText="Check Open Sea"
         @click="checkOpenSea"
       />
@@ -19,7 +20,7 @@
 import { mapState } from "vuex";
 import axios from "axios";
 import PoolItem from "@/components/PoolItem";
-import { POOLS_KEY } from "@/utils/config";
+import { POOLS_KEY, Artifact } from "@/utils/config";
 export default {
   data: () => ({
     pools: [],
@@ -43,7 +44,12 @@ export default {
     await this.loadContract();
   },
   methods: {
-    checkOpenSea(id) {},
+    checkOpenSea(item) {
+      console.log(item);
+      window.open(
+        `https://opensea.io/assets/${Artifact.rinkeby.hal9kLtd}/${id}`
+      );
+    },
     async loadContract() {
       await this.loadPool("V1968");
     },
