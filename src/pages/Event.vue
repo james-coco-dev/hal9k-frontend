@@ -1,7 +1,5 @@
 <template>
   <div>
-    <div class="background-1"></div>
-
     <div class="signal">
       <img src="@/static/images/glow-mobile.gif" />
     </div>

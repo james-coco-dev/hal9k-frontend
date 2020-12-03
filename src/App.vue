@@ -237,6 +237,7 @@ export default {
         .call();
       if (startTimestamp > 0) {
         this.$store.commit("event/setStarted", true);
+        return;
       }
       await this.getReward(this.address);
       await this.getCurrentStage(this.address);

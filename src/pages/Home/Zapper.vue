@@ -51,10 +51,10 @@ export default {
   },
   watch: {
     async provider() {
-      if (this.provider) await this.loadContract();
+      await this.loadContract();
     },
     async address() {
-      if (this.provider) await this.loadContract();
+      await this.loadContract();
     },
     async ethAmount() {
       if (!this.provider) return;
@@ -99,6 +99,7 @@ export default {
       );
     },
     async loadContract() {
+      if (!this.provider || !this.hal9kv1Router) return;
       await this.getBalance();
     },
   },

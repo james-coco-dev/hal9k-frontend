@@ -11,7 +11,7 @@
           >MAIN CONSOLE</router-link
         >
         <router-link class="menu-item" to="/event">LGE EVENT</router-link>
-        <router-link class="menu-item" to="/gallery" v-if="started"
+        <router-link class="menu-item" to="/gallery" v-if="!started"
           >NFT GALLERY</router-link
         >
         <router-link class="menu-item" to="/market" v-if="started"

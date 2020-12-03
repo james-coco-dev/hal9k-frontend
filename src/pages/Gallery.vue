@@ -45,7 +45,6 @@ export default {
   },
   methods: {
     checkOpenSea(item) {
-      console.log(item);
       window.open(
         `https://opensea.io/assets/${Artifact.mainnet.hal9kLtd}/${id}`
       );
