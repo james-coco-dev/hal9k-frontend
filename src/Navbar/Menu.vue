@@ -20,7 +20,10 @@
         <router-link class="menu-item" to="/deck" v-if="started && !ongoing"
           >MY DECK</router-link
         >
-        <router-link class="menu-item" to="/drop" v-if="started && !ongoing"
+        <router-link
+          class="menu-item"
+          to="/drop"
+          v-if="started && !ongoing && stage"
           >NFT REWARD</router-link
         >
       </div>
@@ -37,6 +40,7 @@ export default {
     ...mapState({
       started: (state) => state.event.started,
       ongoing: (state) => state.event.ongoing,
+      stage: (state) => state.account.stage,
     }),
   },
 };

@@ -56,7 +56,9 @@ export default {
       }
       this.$store.commit("loading", false);
     },
-    buy(id) {},
+    buy(item) {
+      console.log(item.id);
+    },
   },
 };
 </script>

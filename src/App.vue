@@ -227,6 +227,8 @@ export default {
         .liquidityGenerationOngoing()
         .call();
       this.$store.commit("event/setOngoing", liquidityOngoing);
+      const isStakingStarted = await this.isHal9kStakingStarted(this.address);
+      if (!isStakingStarted) return;
       await this.getReward(this.address);
       await this.getCurrentStage(this.address);
       await this.getStakeStartTime(this.address);
@@ -242,13 +244,6 @@ export default {
       if (res.events.waitTimeUnitUpdated.returnValues.waitTimeUnit) {
         this.$snotify.success("Successfully updated wait time unit");
       }
-    },
-    async isHal9kStakingStarted(sender) {
-      if (!this.hal9kNftPool) return;
-      const res = await this.hal9kNftPool.methods
-        .isHal9kStakingStarted(sender)
-        .call();
-      console.log(res);
     },
     async getStakedAmountOfUser(sender) {
       if (!this.hal9kNftPool) return;
