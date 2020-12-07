@@ -181,7 +181,6 @@ export default {
       const res = await this.hal9kNftPool.methods
         .isHal9kStakingStarted(sender)
         .call();
-      console.log(res);
     },
     async getReward(address) {
       const userData = { address: address };
@@ -201,7 +200,6 @@ export default {
       const res = await this.hal9kNftPool.methods
         .getStakeStartTime(sender)
         .call({ from: this.address });
-      console.log(res);
     },
     async getLastUpdateTime(sender) {
       if (!this.hal9kNftPool) return;
@@ -215,35 +213,29 @@ export default {
       const res = await this.hal9kNftPool.methods
         .getStakedAmountOfUser(sender)
         .call({ from: this.address });
-      console.log(res);
     },
     async getCurrentStage(sender) {
       if (!this.hal9kNftPool) return;
       const res = await this.hal9kNftPool.methods
         .getCurrentStage(sender)
         .call({ from: this.address });
-      console.log(res);
       this.$store.commit("account/setStage", res);
     },
     async confirmVaultInitialize() {
       if (!this.hal9kVault) return;
       const res = await this.hal9kVault.methods._hal9kNftPool().call();
-      console.log(res);
     },
     async load() {
       if (!this.hal9k) return;
       const startTimestamp = await this.hal9k.methods
         .contractStartTimestamp()
         .call();
-      if (startTimestamp > 0) {
-        this.$store.commit("event/setStarted", true);
-
-        const liquidityOngoing = await this.hal9k.methods
-          .liquidityGenerationOngoing()
-          .call();
-        this.$store.commit("event/setOngoing", liquidityOngoing);
-        return;
-      }
+      if (startTimestamp <= 0) return;
+      this.$store.commit("event/setStarted", true);
+      const liquidityOngoing = await this.hal9k.methods
+        .liquidityGenerationOngoing()
+        .call();
+      this.$store.commit("event/setOngoing", liquidityOngoing);
       await this.getReward(this.address);
       await this.getCurrentStage(this.address);
       await this.getStakeStartTime(this.address);

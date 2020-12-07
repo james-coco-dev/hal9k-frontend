@@ -6,11 +6,14 @@
       <router-link
         class="menu-item"
         to="/zap"
-        v-if="started && !ongoing"
+        v-if="address && provider && started && !ongoing"
         :class="{ active: $route.name === 'zapper' }"
         >&#8227; Zapper</router-link
       >
-      <router-link class="menu-item" to="/farm" v-if="started && !ongoing"
+      <router-link
+        class="menu-item"
+        to="/farm"
+        v-if="address && provider && started && !ongoing"
         >&#8227; Farming</router-link
       >
       <router-link
@@ -32,8 +35,10 @@ export default {
   name: "destination-box",
   computed: {
     ...mapState({
+      address: (state) => state.account.address,
       started: (state) => state.event.started,
       ongoing: (state) => state.event.ongoing,
+      provider: (state) => state.metamask.provider,
     }),
   },
 };

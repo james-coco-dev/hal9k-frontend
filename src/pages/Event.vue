@@ -103,7 +103,6 @@ export default {
     timestamp: 0,
     currentTimestamp: 0,
     liquidityEnds: 7 * 24 * 60 * 60,
-    //liquidityEnds: 2 * 60,
     day: 0,
     hour: 0,
     min: 0,

@@ -1,6 +1,6 @@
 <template>
   <main-wrapper>
-    <div v-if="started && !ongoing">
+    <div v-if="provider && address && started && !ongoing">
       <div>
         <img width="30%" src="@/static/images/farm.png" />
       </div>
@@ -34,6 +34,7 @@
         <button @click="withdraw">Withdraw</button>
       </div>
     </div>
+    <div v-else-if="!address || !provider">Please connect wallet</div>
     <div v-else-if="!started">Liquidity Event is not started</div>
     <div v-else>Liquidity Event is still ongoing</div>
   </main-wrapper>

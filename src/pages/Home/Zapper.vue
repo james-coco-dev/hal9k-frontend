@@ -1,6 +1,9 @@
 <template>
   <main-wrapper>
-    <div class="zap-container" v-if="started && !ongoing">
+    <div
+      class="zap-container"
+      v-if="provider && address && started && !ongoing"
+    >
       <div class="zap-caption">ZAPPER</div>
       <div>
         Swap ETH to HAL9K/ETH LP
@@ -29,6 +32,7 @@
         <button @click="swap">SWAP</button>
       </div>
     </div>
+    <div v-else-if="!address || !provider">Please connect wallet</div>
     <div v-else-if="!started">Liquidity Event is not started</div>
     <div v-else>Liquidity Event is still ongoing</div>
   </main-wrapper>
