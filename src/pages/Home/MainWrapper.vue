@@ -9,7 +9,9 @@
       <section class="empty" v-responsive="['hidden-all', 'lg']"></section>
       <section class="c2 screen">
         <p class="label">C 2</p>
-        <div class="c2-container"><slot></slot></div>
+        <div class="c2-container">
+          <slot></slot>
+        </div>
       </section>
       <section class="empty" v-responsive.xl></section>
       <section class="c3 screen" v-responsive.xl.xs>

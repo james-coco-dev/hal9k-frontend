@@ -1,6 +1,6 @@
 <template>
   <main-wrapper>
-    <div class="zap-container">
+    <div class="zap-container" v-if="started && !ongoing">
       <div class="zap-caption">ZAPPER</div>
       <div>
         Swap ETH to HAL9K/ETH LP
@@ -29,6 +29,8 @@
         <button @click="swap">SWAP</button>
       </div>
     </div>
+    <div v-else-if="!started">Liquidity Event is not started</div>
+    <div v-else>Liquidity Event is still ongoing</div>
   </main-wrapper>
 </template>
 
@@ -43,6 +45,8 @@ export default {
   }),
   computed: {
     ...mapState({
+      started: (state) => state.event.started,
+      ongoing: (state) => state.event.ongoing,
       address: (state) => state.account.address,
       web3: (state) => state.metamask.web3,
       provider: (state) => state.metamask.provider,

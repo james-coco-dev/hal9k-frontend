@@ -10,7 +10,7 @@ console.log("API_URL : ", API_URL);
 
 export const POOLS_KEY = "https://api.hal9k.ai/pools/";
 
-export const Artifact = {
+const abi = {
   rinkeby: {
     hal9k: "0x53dEf6252a3b5e3f5aea8009B6Da528DA02D7a65",
     hal9kLtd: "0xA1A94F6348E18C9c70b41B7803c1a0fAceCEdDBf",
@@ -24,11 +24,12 @@ export const Artifact = {
     hal9kVault: "",
     hal9kLtd: "",
     hal9kNftpool: "",
-    hal9kv1Router: "",
     pairAddress: "",
   },
 };
 
+export const Artifact =
+  process.env.NODE_ENV === "development" ? abi.rinkeby : abi.mainnet;
 // NOTE: This NFT config is all changeable
 export const NFTConfig = {
   numberOfNFTsByClass: {
@@ -68,7 +69,4 @@ export const NFTConfig = {
 
 export const UPGRADE_ID = 11;
 
-export const NETWORK = {
-  MAINNET: 1,
-  RINKEBY: 4,
-};
+export const NETWORKID = process.env.NODE_ENV === "development" ? 4 : 1;

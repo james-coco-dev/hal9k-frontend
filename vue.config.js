@@ -9,6 +9,11 @@ module.exports = {
         "@": path.join(__dirname, "./src"),
       },
     },
+    performance: {
+      hints: false,
+      maxEntrypointSize: 51200000,
+      maxAssetSize: 51200000,
+    },
   },
   chainWebpack(config) {
     if (!isProduction) return;

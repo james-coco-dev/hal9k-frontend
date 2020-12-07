@@ -45,9 +45,7 @@ export default {
   },
   methods: {
     checkOpenSea(item) {
-      window.open(
-        `https://opensea.io/assets/${Artifact.mainnet.hal9kLtd}/${id}`
-      );
+      window.open(`https://opensea.io/assets/${Artifact.hal9kLtd}/${id}`);
     },
     async loadContract() {
       await this.loadPool("V1968");

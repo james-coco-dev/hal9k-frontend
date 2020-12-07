@@ -160,7 +160,7 @@ export default {
       if (!this.hal9kVault || !this.hal9k) return;
       // Add new pool
       await this.hal9kVault.methods
-        .add(100, Artifact.mainnet.pairAddress, false, false)
+        .add(100, Artifact.pairAddress, false, false)
         .send({ from: this.address });
       // Start Hal9k LGE
       await this.hal9k.methods
@@ -237,6 +237,11 @@ export default {
         .call();
       if (startTimestamp > 0) {
         this.$store.commit("event/setStarted", true);
+
+        const liquidityOngoing = await this.hal9k.methods
+          .liquidityGenerationOngoing()
+          .call();
+        this.$store.commit("event/setOngoing", liquidityOngoing);
         return;
       }
       await this.getReward(this.address);

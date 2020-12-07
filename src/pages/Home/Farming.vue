@@ -1,6 +1,6 @@
 <template>
   <main-wrapper>
-    <div>
+    <div v-if="started && !ongoing">
       <div>
         <img width="30%" src="@/static/images/farm.png" />
       </div>
@@ -34,6 +34,8 @@
         <button @click="withdraw">Withdraw</button>
       </div>
     </div>
+    <div v-else-if="!started">Liquidity Event is not started</div>
+    <div v-else>Liquidity Event is still ongoing</div>
   </main-wrapper>
 </template>
 
@@ -53,6 +55,8 @@ export default {
   }),
   computed: {
     ...mapState({
+      started: (state) => state.event.started,
+      ongoing: (state) => state.event.ongoing,
       address: (state) => state.account.address,
       lastUpdateTime: (state) => state.account.lastUpdateTime,
       hal9kVault: (state) => state.contract.hal9kVault,
@@ -165,7 +169,7 @@ export default {
       try {
         const res = await this.hal9kWethPair.methods
           .approve(
-            Artifact.mainnet.hal9kVault,
+            Artifact.hal9kVault,
             new BigNumber(10).pow(new BigNumber(60)).toFixed()
           )
           .send({ from: this.address });
@@ -178,7 +182,7 @@ export default {
     async checkAllowance() {
       try {
         const allowance = await this.hal9kWethPair.methods
-          .allowance(this.address, Artifact.mainnet.hal9kVault)
+          .allowance(this.address, Artifact.hal9kVault)
           .call();
         if (allowance > 0) this.isApproved = true;
       } catch (error) {
@@ -190,7 +194,7 @@ export default {
     async checkVaultInfo() {
       try {
         const res = await this.hal9kWethPair.methods
-          .balanceOf(Artifact.mainnet.hal9kVault)
+          .balanceOf(Artifact.hal9kVault)
           .call();
         this.totalStaked = new BigNumber(this.web3.utils.fromWei(res)).toFixed(
           3,

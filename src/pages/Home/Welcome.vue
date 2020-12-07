@@ -1,17 +1,21 @@
 <template>
   <main-wrapper>
     <div>
+      <p>Hello Dave, you're looking well today.</p>
       <p>
-        Hi. You're looking well today.
+        Welcome to the HAL9K interface, here you can access the rarest NFTs in
+        the galaxy.
       </p>
-      <p>
-       Welcome to the HAL9K interface.
-       Here you can access the most rare NFTs in the galaxy.
-      </p>
+      <p>Allow me to direct you to the Liquidity Generating Event below...</p>
+      <router-link to="/event" class="event-link">Liquidity Event</router-link>
     </div>
   </main-wrapper>
 </template>
 
 <script></script>
 
-<style scoped></style>
+<style scoped>
+.event-link {
+  color: white;
+}
+</style>

@@ -259,7 +259,7 @@ export default {
 
 <style lang="scss" scoped>
 .event-container {
-  margin: 2rem 2rem;
+  margin: 0 2rem;
 }
 .lge-box,
 .event-box {

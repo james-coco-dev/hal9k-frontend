@@ -11,16 +11,16 @@
           >MAIN CONSOLE</router-link
         >
         <router-link class="menu-item" to="/event">LGE EVENT</router-link>
-        <router-link class="menu-item" to="/gallery" v-if="started"
+        <router-link class="menu-item" to="/gallery" v-if="started && !ongoing"
           >NFT GALLERY</router-link
         >
-        <router-link class="menu-item" to="/market" v-if="started"
+        <router-link class="menu-item" to="/market" v-if="started && !ongoing"
           >MARKET</router-link
         >
-        <router-link class="menu-item" to="/deck" v-if="started"
+        <router-link class="menu-item" to="/deck" v-if="started && !ongoing"
           >MY DECK</router-link
         >
-        <router-link class="menu-item" to="/drop" v-if="started"
+        <router-link class="menu-item" to="/drop" v-if="started && !ongoing"
           >NFT REWARD</router-link
         >
       </div>
@@ -36,6 +36,7 @@ export default {
   computed: {
     ...mapState({
       started: (state) => state.event.started,
+      ongoing: (state) => state.event.ongoing,
     }),
   },
 };
