@@ -167,15 +167,6 @@ export default {
         .startLiquidityGenerationEventForHAL9K()
         .send({ from: this.address });
     },
-    async updateWaitTimeUnit(seconds) {
-      if (!this.hal9kNftPool) return;
-      const res = await this.hal9kNftPool.methods
-        .updateWaitTimeUnit(seconds)
-        .send({ from: this.address });
-      if (res.events.waitTimeUnitUpdated.returnValues.waitTimeUnit) {
-        this.$snotify.success("Successfully updated wait time unit");
-      }
-    },
     async isHal9kStakingStarted(sender) {
       if (!this.hal9kNftPool) return;
       const res = await this.hal9kNftPool.methods
