@@ -23,7 +23,7 @@ export default {
       provider: (state) => state.metamask.provider,
     }),
   },
-  async mounted() {
+  async created() {
     if (this.address) await this.connectWallet();
   },
   methods: {

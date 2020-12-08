@@ -80,8 +80,8 @@ export default {
     },
   },
   watch: {
-    async address() {
-      await this.readBalance();
+    async address(value) {
+      if (value) await this.readBalance();
     },
   },
   methods: {
@@ -186,7 +186,7 @@ export default {
     },
     async readBalance() {
       if (!this.hal9kLtd) return;
-
+      this.$store.commit("loading", true);
       let addresses = [];
       let ids = [];
 
@@ -205,6 +205,7 @@ export default {
         }
       }
       this.$store.commit("account/setBalance", res);
+      this.$store.commit("loading", false);
     },
     async getCardInfo(reward, count) {
       const response = await axios.get("https://api.hal9k.ai/hals/" + reward);

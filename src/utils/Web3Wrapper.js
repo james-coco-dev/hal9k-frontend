@@ -14,7 +14,6 @@ class Web3Wrapper {
     store.commit("account/setChainId", _chainId);
     if (parseInt(_chainId) !== NETWORKID) {
       this.disconnect();
-      console.log("AAA");
       vue.$snotify.error("Please change the network");
     }
   };
@@ -36,6 +35,7 @@ class Web3Wrapper {
 
   connect = async () => {
     try {
+      this.disconnect();
       const provider = await detectEthereumProvider();
       if (provider) {
         if (provider !== window.ethereum)
@@ -60,9 +60,7 @@ class Web3Wrapper {
           console.error(err);
           store.dispatch("account/disconnect");
         });
-      store.commit("metamask/setProvider", provider);
       const web3 = new Web3(provider);
-      store.commit("metamask/setWeb3", web3);
       const hal9k = new web3.eth.Contract(Hal9kJson, Artifact.hal9k);
       hal9k.setProvider(provider);
 
@@ -89,6 +87,8 @@ class Web3Wrapper {
 
       const hal9kWethPair = new web3.eth.Contract(ERC20, Artifact.pairAddress);
       hal9kWethPair.setProvider(provider);
+      store.commit("metamask/setProvider", provider);
+      store.commit("metamask/setWeb3", web3);
       store.commit("contract/setContracts", {
         hal9k,
         hal9kLtd,

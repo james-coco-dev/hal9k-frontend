@@ -7,9 +7,7 @@
     >
       MENU
       <div class="menu-list" v-if="isOpened" @click="isOpened = false">
-        <router-link class="menu-item" to="/" v-if="started"
-          >MAIN CONSOLE</router-link
-        >
+        <router-link class="menu-item" to="/">MAIN CONSOLE</router-link>
         <router-link class="menu-item" to="/event">LGE EVENT</router-link>
         <router-link class="menu-item" to="/gallery" v-if="started && !ongoing"
           >NFT GALLERY</router-link

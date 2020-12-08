@@ -6,7 +6,6 @@ export const API_URL =
     : process.env.NODE_ENV === "production"
     ? "https://api.hal9k.ai"
     : "";
-console.log("API_URL : ", API_URL);
 
 export const POOLS_KEY = "https://api.hal9k.ai/pools/";
 
@@ -27,6 +26,7 @@ const abi = {
     pairAddress: "",
   },
 };
+export const MULTISIG_ADDR = "0x94C81875E689bdecf9240D23D7b4a0913Da08962";
 
 export const Artifact =
   process.env.NODE_ENV === "development" ? abi.rinkeby : abi.mainnet;

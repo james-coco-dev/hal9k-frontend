@@ -15,8 +15,7 @@
 import { mapState } from "vuex";
 import axios from "axios";
 import PoolItem from "@/components/PoolItem";
-import { POOLS_KEY } from "@/utils/config";
-import { UPGRADE_ID } from "../utils/config";
+import { POOLS_KEY, MULTISIG_ADDR, UPGRADE_ID } from "@/utils/config";
 export default {
   data: () => ({
     pools: [],
@@ -29,11 +28,13 @@ export default {
       web3: (state) => state.metamask.web3,
       provider: (state) => state.metamask.provider,
       hal9kLtd: (state) => state.contract.hal9kLtd,
+      address: (state) => state.account.address,
+      hal9kNftPool: (state) => state.contract.hal9kNftPool,
     }),
   },
   watch: {
-    async address() {
-      await this.loadContract();
+    async address(value) {
+      if (value) await this.loadContract();
     },
   },
   async mounted() {
@@ -41,14 +42,30 @@ export default {
   },
   methods: {
     async loadContract() {
-      if (!this.hal9kLtd) return;
+      if (!this.hal9kLtd || !this.hal9kNftPool) return;
+      console.log(this.hal9kNftPool.methods);
       this.$store.commit("loading", true);
+      this.pools = [];
       const { data } = await axios.get(POOLS_KEY + "V1968");
       const upgradeCards = data.filter((elem) => elem.rarity === "Upgrade");
       try {
         upgradeCards.map(async (card) => {
           const res = await this.hal9kLtd.methods.totalSupply(card.id).call();
-          this.pools = [...this.pools, { ...card, minted: parseInt(res) }];
+          const {
+            sellStartTime,
+            sellEndTime,
+            cardAmount,
+            soldAmount,
+            price,
+          } = await this.hal9kNftPool.methods.getSellEventData(card.id).call();
+          console.log(
+            sellStartTime,
+            sellEndTime,
+            cardAmount,
+            soldAmount,
+            price
+          );
+          this.pools.push({ ...card, minted: parseInt(res) });
         });
       } catch (error) {
         console.error(error);
@@ -56,8 +73,21 @@ export default {
       }
       this.$store.commit("loading", false);
     },
-    buy(item) {
-      console.log(item.id);
+    async buy(item) {
+      if (!this.hal9kNftPool) return;
+      try {
+        const {
+          transactionHash,
+        } = await this.web3.eth
+          .mintCardForUserDuringSellEvent(item.id, 1)
+          .send({ from: this.address, value: this.web3.utils.toWei(amount) });
+        const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
+        if (tx) {
+          this.$snotify.success("Successfully minted the card");
+        }
+      } catch (err) {
+        this.$snotify.error(err.message);
+      }
     },
   },
 };

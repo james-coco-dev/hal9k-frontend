@@ -125,8 +125,8 @@ export default {
     }),
   },
   watch: {
-    async address() {
-      await this.loadContract();
+    async address(value) {
+      if (value) await this.loadContract();
     },
     ethToDeposit() {
       this.ethToDeposit = String(this.ethToDeposit).replace(/[^0-9.]/, "");

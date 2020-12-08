@@ -68,8 +68,8 @@ export default {
     }),
   },
   watch: {
-    async address() {
-      if (this.provider) await this.loadContract();
+    async address(value) {
+      if (value) await this.loadContract();
     },
   },
   methods: {

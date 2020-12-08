@@ -58,8 +58,8 @@ export default {
     }),
   },
   watch: {
-    async address() {
-      await this.loadContract();
+    async address(value) {
+      if (value) await this.loadContract();
     },
     async ethAmount() {
       if (!this.provider) return;

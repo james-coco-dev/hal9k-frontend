@@ -36,8 +36,8 @@ export default {
     PoolItem,
   },
   watch: {
-    async address() {
-      await this.loadContract();
+    async address(value) {
+      if (value) await this.loadContract();
     },
   },
   async mounted() {
