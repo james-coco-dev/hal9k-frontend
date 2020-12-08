@@ -30,13 +30,15 @@
             <img :src="nft.image" :alt="nft.name" />
           </div>
           <div class="pool-info">
-            <div class="nft-count">
-              <span class="remaining">{{ getRemainString(nft) }}</span
-              ><span class="supply"> / {{ nft.max_supply }}</span> Left
+            <div class="pool-info-left">
+              <div class="nft-count">
+                <span class="remaining">{{ getRemainString(nft) }}</span
+                ><span class="supply"> / {{ nft.max_supply }}</span> Left
+              </div>
+              <div class="nft-name">{{ nft.name }}</div>
+              <div class="nft-description">{{ nft.description }}</div>
+              <div class="nft-own">{{ nft.owns }} Owned</div>
             </div>
-            <div class="nft-name">{{ nft.name }}</div>
-            <div class="nft-description">{{ nft.description }}</div>
-            <div class="nft-own">{{ nft.owns }} Owned</div>
           </div>
         </div>
       </section>
@@ -189,6 +191,7 @@ export default {
       this.$store.commit("loading", true);
       let addresses = [];
       let ids = [];
+      this.myDeck = [];
 
       for (let i = 1; i < 12; i++) {
         ids.push(i);

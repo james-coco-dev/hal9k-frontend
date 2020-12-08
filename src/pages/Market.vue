@@ -6,7 +6,12 @@
     </div>
     <div class="caption">Market</div>
     <div class="pool-container">
-      <pool-item :pools="pools" buttonText="Buy" @click="buy" />
+      <pool-item
+        :pools="pools"
+        buttonText="Buy"
+        @click="buy"
+        :showMarketInfo="true"
+      />
     </div>
   </div>
 </template>
@@ -43,7 +48,6 @@ export default {
   methods: {
     async loadContract() {
       if (!this.hal9kLtd || !this.hal9kNftPool) return;
-      console.log(this.hal9kNftPool.methods);
       this.$store.commit("loading", true);
       this.pools = [];
       const { data } = await axios.get(POOLS_KEY + "V1968");
@@ -51,6 +55,9 @@ export default {
       try {
         upgradeCards.map(async (card) => {
           const res = await this.hal9kLtd.methods.totalSupply(card.id).call();
+          const owned = await this.hal9kLtd.methods
+            .balanceOf(this.address, card.id)
+            .call();
           const {
             sellStartTime,
             sellEndTime,
@@ -58,14 +65,16 @@ export default {
             soldAmount,
             price,
           } = await this.hal9kNftPool.methods.getSellEventData(card.id).call();
-          console.log(
+          this.pools.push({
+            ...card,
+            minted: parseInt(res),
             sellStartTime,
             sellEndTime,
             cardAmount,
             soldAmount,
-            price
-          );
-          this.pools.push({ ...card, minted: parseInt(res) });
+            owns: owned,
+            price: this.web3.utils.fromWei(price),
+          });
         });
       } catch (error) {
         console.error(error);
@@ -75,15 +84,17 @@ export default {
     },
     async buy(item) {
       if (!this.hal9kNftPool) return;
+      const { price } = this.pools.find((elem) => elem.id === item.id);
       try {
         const {
           transactionHash,
-        } = await this.web3.eth
+        } = await this.hal9kNftPool.methods
           .mintCardForUserDuringSellEvent(item.id, 1)
-          .send({ from: this.address, value: this.web3.utils.toWei(amount) });
+          .send({ from: this.address, value: this.web3.utils.toWei(price) });
         const tx = await this.web3.eth.getTransactionReceipt(transactionHash);
         if (tx) {
           this.$snotify.success("Successfully minted the card");
+          await this.loadContract();
         }
       } catch (err) {
         this.$snotify.error(err.message);
