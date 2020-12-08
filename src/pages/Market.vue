@@ -32,7 +32,7 @@ export default {
     }),
   },
   watch: {
-    async provider() {
+    async address() {
       await this.loadContract();
     },
   },

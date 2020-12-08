@@ -58,9 +58,6 @@ export default {
     }),
   },
   watch: {
-    async provider() {
-      await this.loadContract();
-    },
     async address() {
       await this.loadContract();
     },

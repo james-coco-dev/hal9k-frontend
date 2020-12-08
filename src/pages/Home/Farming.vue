@@ -68,9 +68,6 @@ export default {
     }),
   },
   watch: {
-    async provider() {
-      if (this.provider) await this.loadContract();
-    },
     async address() {
       if (this.provider) await this.loadContract();
     },
@@ -159,6 +156,7 @@ export default {
           if (!this.lastUpdateTime) {
             this.createUser(this.address, 11);
             this.$snotify.success("Staking started...");
+            this.$store.commit("account/setStakingStarted", true);
           }
         }
       } catch (error) {

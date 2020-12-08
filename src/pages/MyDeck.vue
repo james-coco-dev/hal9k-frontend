@@ -5,7 +5,7 @@
       <img src="@/static/images/glow-mobile.gif" />
     </div>
     <div class="caption">My Deck</div>
-    <div class="stage-container">Stage {{ stage }}</div>
+    <div class="stage-container" v-if="stage">Stage {{ stage }}</div>
     <div class="pool-container" v-if="myDeck.length">
       <div class="upgrade-row">
         You can update your common, rare, epic and legendary NFTs with
@@ -80,9 +80,6 @@ export default {
     },
   },
   watch: {
-    async provider() {
-      await this.readBalance();
-    },
     async address() {
       await this.readBalance();
     },
@@ -158,7 +155,7 @@ export default {
             upgradeCardCount--;
           } else {
             this.$snotify.info(
-              "You should have more than 1 Rare cards to upgrade to Legendary."
+              "You should have more than 1 Epic cards to upgrade to Legendary."
             );
           }
         }

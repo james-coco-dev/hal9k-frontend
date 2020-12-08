@@ -76,7 +76,7 @@
               <p>{{ min }} mins</p>
               <p>{{ sec }} secs</p>
             </div>
-            <div class="left-day" v-else>Liquidity Event Ended</div>
+            <div class="left-day" v-else>Liquidity Event is ended</div>
           </div>
           <div v-else class="left-day">
             <p>Liquidity Event is not started</p>
@@ -126,10 +126,7 @@ export default {
   },
   watch: {
     async address() {
-      if (this.provider) await this.loadContract();
-    },
-    async provider() {
-      if (this.provider) await this.loadContract();
+      await this.loadContract();
     },
     ethToDeposit() {
       this.ethToDeposit = String(this.ethToDeposit).replace(/[^0-9.]/, "");

@@ -14,7 +14,8 @@ class Web3Wrapper {
     store.commit("account/setChainId", _chainId);
     if (parseInt(_chainId) !== NETWORKID) {
       this.disconnect();
-      vue.$snotify.error("Please change to the Mainnet");
+      console.log("AAA");
+      vue.$snotify.error("Please change the network");
     }
   };
 

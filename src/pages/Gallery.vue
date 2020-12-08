@@ -36,7 +36,7 @@ export default {
     PoolItem,
   },
   watch: {
-    async provider() {
+    async address() {
       await this.loadContract();
     },
   },

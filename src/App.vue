@@ -26,6 +26,7 @@ export default {
       hal9kNftPool: (state) => state.contract.hal9kNftPool,
       web3: (state) => state.metamask.web3,
       provider: (state) => state.metamask.provider,
+      stakingStarted: (state) => state.account.stakingStarted,
     }),
   },
   watch: {
@@ -34,6 +35,9 @@ export default {
     },
     async provider() {
       await this.load();
+    },
+    async stakingStarted(value) {
+      if (value) await this.load();
     },
   },
   methods: {
