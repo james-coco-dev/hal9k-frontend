@@ -3,15 +3,15 @@ export default {
 
   state: {
     started: false,
-    timestamp: 0,
+    ongoing: false,
   },
 
   mutations: {
     setStarted(state, payload) {
       state.started = payload;
     },
-    setTimeStamp(state, payload) {
-      state.timestamp = payload;
+    setOngoing(state, payload) {
+      state.ongoing = payload;
     },
   },
 };

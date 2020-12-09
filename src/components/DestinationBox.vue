@@ -3,7 +3,19 @@
     <p class="blink">Choose a destination...</p>
     <div class="menu-list">
       <router-link class="menu-item" to="/">&#8227; Welcome</router-link>
-      <router-link class="menu-item" to="/farm">&#8227; Farming</router-link>
+      <router-link
+        class="menu-item"
+        to="/zap"
+        v-if="address && provider && started && !ongoing"
+        :class="{ active: $route.name === 'zapper' }"
+        >&#8227; Zapper</router-link
+      >
+      <router-link
+        class="menu-item"
+        to="/farm"
+        v-if="address && provider && started && !ongoing"
+        >&#8227; Farming</router-link
+      >
       <router-link
         class="menu-item"
         to="/tokenomics"
@@ -18,8 +30,17 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "destination-box",
+  computed: {
+    ...mapState({
+      address: (state) => state.account.address,
+      started: (state) => state.event.started,
+      ongoing: (state) => state.event.ongoing,
+      provider: (state) => state.metamask.provider,
+    }),
+  },
 };
 </script>
 

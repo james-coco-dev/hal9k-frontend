@@ -1,6 +1,6 @@
 <template>
   <div class="nav-bar">
-    <Menu />
+    <Menu v-if="provider && address" />
     <button class="green" v-if="address" @click="disconnect">
       {{ compressAddress(address, 10, 5) }}
     </button>
@@ -12,7 +12,7 @@
 <script>
 import { mapState } from "vuex";
 import Menu from "./Menu";
-import Metamask from "../utils/Metamask";
+import Web3Wrapper from "../utils/Web3Wrapper";
 export default {
   components: {
     Menu,
@@ -20,14 +20,15 @@ export default {
   computed: {
     ...mapState({
       address: (state) => state.account.address,
+      provider: (state) => state.metamask.provider,
     }),
   },
-  async mounted() {
+  async created() {
     if (this.address) await this.connectWallet();
   },
   methods: {
     async connectWallet() {
-      await Metamask.connect();
+      await Web3Wrapper.connect();
     },
     compressAddress(address, leftOffset, rightOffset) {
       return (
@@ -40,7 +41,7 @@ export default {
       this.$router.push("/shop");
     },
     disconnect() {
-      Metamask.disconnect();
+      Web3Wrapper.disconnect();
     },
   },
 };
